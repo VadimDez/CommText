@@ -4,14 +4,47 @@
 
 var express = require('express');
 var app = express();
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+
 var PORT = process.env.PORT || 8888;
+
+mongoose.connect('mongodb://' + process.env.MONGODB);
+
+var Mark = mongoose.model('Mark', {
+  text: String,
+  xPath: String,
+  site: String
+});
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.end();
 });
 
-app.post('/marks', (req, res) => {
-  res.send({link: '/marks/1'});
+app.get('/sites/:site/marks', (req, res) => {
+  Mark.find((err, marks) => {
+    if (err) {
+      return res.statusCode(400)
+        .end();
+    }
+
+    res.send(marks);
+  });
+});
+
+app.post('/sites/:site/marks', (req, res) => {
+  console.log(req.body);
+  (new Mark({ site: req.param.site, text: req.body.text, xPath: req.body.xPath })).save((err, mark) => {
+    if (err) {
+      return res.statusCode(400)
+        .end();
+    }
+    
+    res.send(mark);
+  });
 });
 
 app.listen(PORT, () => {
