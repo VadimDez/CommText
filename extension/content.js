@@ -6,6 +6,7 @@ var API = 'https://commtext.herokuapp.com';
 var popup;
 var markClass = 'commtext-marked';
 var sendCommentCallback;
+var sendTagsCallback;
 
 main();
 
@@ -93,7 +94,10 @@ function showPopup(markId) {
 
   sendCommentCallback = function (comment) {
     sendComment(markId, comment);
-  }
+  };
+  sendTagsCallback = function (tags) {
+    sendTags(markId, tags);
+  };
 }
 
 function closePopup() {
@@ -124,6 +128,32 @@ function addPopup() {
   logo.setAttribute('src', 'http://d26uhratvi024l.cloudfront.net/gsc/89SNOO/24/85/8b/24858bc532264f72b51616d95a0e3ab4/images/artikelpage_leser/u42.png?token=7846536d56bfe40733345eee074692f4');
   nav.appendChild(logo);
 
+  var tagsContainer = document.createElement('div');
+  tagsContainer.setAttribute('id', 'popup-tags');
+
+  var tagsTitle = document.createElement('h5');
+  tagsTitle.innerHTML = 'Tags';
+  tagsContainer.appendChild(tagsTitle);
+
+  var tags = document.createElement('div');
+  tags.setAttribute('id', 'popup-tags__tags');
+  tagsContainer.appendChild(tags);
+
+  var tagsTextarea = document.createElement('textarea');
+  tagsTextarea.setAttribute('id', 'popup-tags__textarea');
+  tagsContainer.appendChild(tagsTextarea);
+
+  var buttonSendTags = document.createElement('button');
+  buttonSendTags.setAttribute('type', 'button');
+  buttonSendTags.innerText = 'Send Tags';
+  buttonSendTags.addEventListener('click', function () {
+    sendCommentCallback(textarea.value);
+  });
+
+  tagsContainer.appendChild(buttonSendTags);
+
+  popup.appendChild(tagsContainer);
+
   var textareaContainer = document.createElement('div');
   textareaContainer.setAttribute('id', 'commtext-textarea-container');
   var textarea = document.createElement('textarea');
@@ -131,6 +161,10 @@ function addPopup() {
   var commentTitle = document.createElement('h5');
   commentTitle.innerHTML = 'Comment';
   textareaContainer.appendChild(commentTitle);
+
+  var comments = document.createElement('div');
+  comments.setAttribute('id', 'commtext-textarea-container-comments');
+  textareaContainer.appendChild(comments);
 
   textareaContainer.appendChild(textarea);
   popup.appendChild(textareaContainer);
@@ -209,6 +243,20 @@ function sendComment(markId, comment) {
   };
 
   request.send(JSON.stringify({comment: comment}));
+}
+
+function sendTags(markId, tags) {
+  var request = new XMLHttpRequest();
+  request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/tags', true);
+  request.setRequestHeader('Content-Type', 'application/json');
+
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      var tags = JSON.parse(this.response);
+    }
+  };
+
+  request.send(JSON.stringify({tags: tags}));
 }
 
 // main listener

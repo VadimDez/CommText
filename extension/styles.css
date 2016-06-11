@@ -1,5 +1,5 @@
 #commtext-popup {
-    background-color: grey !important;
+    background-color: #F2F2F2 !important;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -21,7 +21,7 @@
 }
 
 #commtext-popup__nav {
-    height: 100px;
+    height: 60px;
 }
 
 #commtext-popup__nav__close-btn {
@@ -36,4 +36,29 @@
     width: 50px;
     height: 50px;
     float: right;
+}
+
+#popup-tags {
+    margin:  10px;
+}
+
+#popup-tags textarea {
+    width: 100%
+}
+
+#popup-tags button {
+    margin-top: 10px;
+    float: right;
+}
+
+#popup-tags__tags {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#popup-tags__tags span {
+    border: 14px solid black;
+    background-color: black;
+    color: #fff;
+    border-radius: 42%;
 }
