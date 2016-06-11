@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sites/:site/marks', (req, res) => {
-  Mark.find((err, marks) => {
+  Mark.find({ site: req.params.site}, (err, marks) => {
     if (err) {
       return res.statusCode(400)
         .end();
@@ -36,8 +36,7 @@ app.get('/sites/:site/marks', (req, res) => {
 });
 
 app.post('/sites/:site/marks', (req, res) => {
-  console.log(req.body);
-  (new Mark({ site: req.param.site, text: req.body.text, xPath: req.body.xPath })).save((err, mark) => {
+  (new Mark({ site: req.params.site, text: req.body.text, xPath: req.body.xPath })).save((err, mark) => {
     if (err) {
       return res.statusCode(400)
         .end();
