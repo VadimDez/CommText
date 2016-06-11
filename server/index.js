@@ -88,12 +88,22 @@ app.post('/sites/:site/marks/:id/comments', (req, res) => {
 });
 
 app.get('/sites/:site/marks/:id/tags', (req, res) => {
-  Tag.find({ mark: req.body.id }, (err, tags) => {
+  Mark.findOne({ _id: req.params.id }, (err, mark) => {
     if (err) {
       return res.status(400).end();
     }
 
-    res.send(tags);
+    if (!mark) {
+      return res.status(404).end();
+    }
+
+    Tag.find({mark: mark._id}, (err, tags) => {
+      if (err) {
+        return res.status(400).end();
+      }
+
+      res.send(tags);
+    });
   });
 });
 
