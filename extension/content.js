@@ -91,11 +91,15 @@ function getElementTreeXPath(element) {
 
 function showPopup(markId) {
   popup.style.display = 'block';
-
+  clearTags();
+  getTags(markId);
+  clearComments();
+  getComments(markId);
   sendCommentCallback = function (comment) {
     sendComment(markId, comment);
   };
   sendTagsCallback = function (tags) {
+
     sendTags(markId, tags);
   };
 }
@@ -147,7 +151,18 @@ function addPopup() {
   buttonSendTags.setAttribute('type', 'button');
   buttonSendTags.innerText = 'Send Tags';
   buttonSendTags.addEventListener('click', function () {
-    sendCommentCallback(textarea.value);
+    var tagsArray = tagsTextarea.value.split(',')
+      .filter(function (value) {
+        return value.trim().length;
+      })
+      .map(function (tag) {
+        return tag.trim();
+      });
+
+    if (tagsArray.length) {
+      renderTags(tags, tagsArray);
+      sendTagsCallback(tagsArray);
+    }
   });
 
   tagsContainer.appendChild(buttonSendTags);
@@ -182,6 +197,14 @@ function addPopup() {
   document.body.appendChild(popup);
 }
 
+function renderTags(elem, tags) {
+  tags.forEach(function (tag) {
+    var tagElem = document.createElement('span');
+    tagElem.innerHTML = tag;
+    elem.appendChild(tagElem);
+  })
+}
+
 function createMark(data) {
   var request = new XMLHttpRequest();
   request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks', true);
@@ -208,6 +231,62 @@ function getMarks() {
   };
 
   request.send();
+}
+
+function clearTags() {
+  clearAllChil(document.querySelector('#popup-tags__tags'));
+}
+function clearComments() {
+  clearAllChil(document.querySelector('#commtext-textarea-container-comments'));
+}
+
+function clearAllChil(elem) {
+  while (elem.firstChild) elem.removeChild(elem.firstChild);
+}
+
+function getTags(markId) {
+  var request = new XMLHttpRequest();
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags', true);
+  request.setRequestHeader('Content-Type', 'application/json');
+
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      renderTags(document.querySelector('#popup-tags__tags'), JSON.parse(this.response)
+        .map(function (tag) {
+          return tag.text;
+        }));
+      renderHighlights(JSON.parse(this.response));
+    }
+  };
+
+  request.send();
+}
+
+
+function getComments(markId) {
+  var request = new XMLHttpRequest();
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments', true);
+  request.setRequestHeader('Content-Type', 'application/json');
+
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      renderComments(JSON.parse(this.response).map(function (comment) {
+        return comment.text;
+      }));
+    }
+  };
+
+  request.send();
+}
+
+function renderComments(comments) {
+  var elem = document.querySelector('#commtext-textarea-container-comments');
+  comments.forEach(function (comment) {
+    var commentElem = document.createElement('div');
+    commentElem.classList.add('commtext-comment');
+    commentElem.innerHTML = comment;
+    elem.appendChild(commentElem);
+  });
 }
 
 function renderHighlights(marks) {
