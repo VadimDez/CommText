@@ -17,6 +17,11 @@ var Mark = mongoose.model('Mark', {
   site: String
 });
 
+var Comment = mongoose.model('Comment', {
+  text: String,
+  mark: String
+});
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -44,6 +49,37 @@ app.post('/sites/:site/marks', (req, res) => {
     
     res.send(mark);
   });
+});
+
+
+app.get('/sites/:site/marks/:id/comments', (req, res) => {
+  Comment.find({ mark: req.body.id }, (err, comments) => {
+    if (err) {
+      return res.statusCode(400).end();
+    }
+
+    res.send(comments);
+  });
+});
+
+app.post('/sites/:site/marks/:id/comments', (req, res) => {
+  Mark.findOne({ _id: req.params.id }, (err, mark) => {
+    if (err) {
+      return res.statusCode(400).end();
+    }
+
+    if (!mark) {
+      return res.statusCode(404).end();
+    }
+
+    (new Comment({ text: req.body.comment, mark: mark._id })).save((err, comment) => {
+      if (err) {
+        return res.statusCode(400).end();
+      }
+
+      return res.send(comment);
+    });
+  })
 });
 
 app.listen(PORT, () => {
