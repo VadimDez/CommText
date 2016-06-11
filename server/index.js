@@ -110,11 +110,12 @@ app.post('/sites/:site/marks/:id/tags', (req, res) => {
 
     req.body.tags.forEach((tag) => {
       tags.push({
-        text: 
+        text: tag,
+        mark: mark._id
       });
     });
     
-    Tag.create(, (err) => {
+    Tag.create(tags, (err) => {
       if (err) {
         return res.status(400).end();
       }
