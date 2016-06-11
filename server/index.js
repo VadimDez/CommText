@@ -58,12 +58,22 @@ app.post('/sites/:site/marks', (req, res) => {
 
 
 app.get('/sites/:site/marks/:id/comments', (req, res) => {
-  Comment.find({ mark: req.body.id }, (err, comments) => {
+  Mark.findOne({ _id: req.params.id }, (err, mark) => {
     if (err) {
       return res.status(400).end();
     }
 
-    res.send(comments);
+    if (!mark) {
+      return res.status(404).end();
+    }
+
+    Comment.find({ mark: mark._id }, (err, comments) => {
+      if (err) {
+        return res.status(400).end();
+      }
+
+      res.send(comments);
+    });
   });
 });
 
