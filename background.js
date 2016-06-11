@@ -5,11 +5,12 @@
 var console = chrome.extension.getBackgroundPage().console;
 
 chrome.contextMenus.create({
-  title: 'Share a highlight of this!',
+  title: 'Mark',
   contexts: ['all'],
   onclick: cb
 });
 
 function cb(info, tab) {
-  console.log('here');
+  console.log('selected:', info.selectionText.trim());
+  console.log('on:', info.pageUrl);
 }
