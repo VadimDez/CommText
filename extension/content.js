@@ -26,7 +26,7 @@ function highlight() {
   range.insertNode(createNode(range.extractContents()));
 
   showPopup();
-  createLink();
+  createMark(JSON.stringify(highlightedText));
 }
 
 function createNode(selectionContents) {
@@ -98,10 +98,10 @@ function addPopup() {
   document.body.appendChild(popup);
 }
 
-function createLink(data) {
+function createMark(data) {
   var request = new XMLHttpRequest();
-  request.open('POST', API + '/marks', true);
-  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+  request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks', true);
+  request.setRequestHeader('Content-Type', 'application/json');
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
@@ -110,4 +110,41 @@ function createLink(data) {
   };
 
   request.send(data);
+}
+
+getMarks();
+
+function getMarks() {
+  var request = new XMLHttpRequest();
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks', true);
+  request.setRequestHeader('Content-Type', 'application/json');
+
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      renderHighlights(JSON.parse(this.response));
+    }
+  };
+
+  request.send();
+}
+
+function renderHighlights(marks) {
+  console.log(marks);
+
+  marks.forEach(mark => {
+    if (!mark.xPath) {
+      return;
+    }
+    var elem = document.evaluate(mark.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+
+    if (elem.singleNodeValue) {
+      elem.singleNodeValue.innerHTML = elem.singleNodeValue.innerHTML.replace(mark.text, replaceMark(mark.text));
+    } else {
+      elem.innerHTML = elem.innerHTML.replace(mark.text, replaceMark(mark.text));
+    }
+  });
+}
+
+function replaceMark(text) {
+  return '<span style="background-color: #FFFFAF">' + text + '</span>';
 }

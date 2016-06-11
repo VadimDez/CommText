@@ -11,6 +11,11 @@ chrome.contextMenus.create({
 });
 
 function cb(info, tab) {
+
+  if (!info.selectionText) {
+    return;
+  }
+  
   console.log('selected:', info.selectionText.trim());
   console.log('on:', info.pageUrl);
 
