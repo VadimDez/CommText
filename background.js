@@ -13,4 +13,17 @@ chrome.contextMenus.create({
 function cb(info, tab) {
   console.log('selected:', info.selectionText.trim());
   console.log('on:', info.pageUrl);
+
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {action: 'test'}, function(response) {
+      console.log(response);
+    });
+  });
+
 }
+
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+  if (changeInfo.status == 'complete') {
+    console.log('loaded');
+  }
+});
