@@ -92,12 +92,11 @@ function showPopup(markId) {
 
 function addPopup() {
   popup = document.createElement('div');
+  popup.setAttribute('id', 'commtext-popup');
 
   var textareaContainer = document.createElement('div');
   textareaContainer.setAttribute('id', 'commtext-textarea-container');
-  textareaContainer.style.margin = '10px';
   var textarea = document.createElement('textarea');
-  textarea.style.width = '100%';
 
   var commentTitle = document.createElement('h5');
   commentTitle.innerHTML = 'Comment';
@@ -107,8 +106,6 @@ function addPopup() {
   popup.appendChild(textareaContainer);
 
   var button = document.createElement('button');
-  button.style['margin-top'] = '10px';
-  button.style.float = 'right';
   button.setAttribute('type', 'button');
   button.innerText = 'Comment';
   button.addEventListener('click', function () {
@@ -117,16 +114,6 @@ function addPopup() {
 
   textareaContainer.appendChild(button);
 
-  popup.style.position = 'fixed';
-  popup.style.top = 0;
-  popup.style.bottom = 0;
-  popup.style.right = 0;
-  popup.style.width = '300px';
-  popup.style.backgroundColor = 'green';
-  popup.style['z-index'] = 9999;
-  popup.style.display = 'none';
-
-  popup.setAttribute('id', 'commtext-popup');
 
   document.body.appendChild(popup);
 }

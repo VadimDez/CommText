@@ -1,0 +1,21 @@
+#commtext-popup {
+    background-color: grey !important;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    z-index: 9999;
+    display: none;
+}
+
+#commtext-textarea-container {
+    margin:  10px;
+}
+#commtext-textarea-container textarea {
+    width:  100%;
+}
+#commtext-textarea-container button {
+    margin-top: 10px;
+    float: right;
+}
