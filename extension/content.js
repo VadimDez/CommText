@@ -99,7 +99,6 @@ function showPopup(markId) {
     sendComment(markId, comment);
   };
   sendTagsCallback = function (tags) {
-
     sendTags(markId, tags);
   };
 }
@@ -198,6 +197,7 @@ function addPopup() {
 }
 
 function renderTags(elem, tags) {
+  console.log(tags);
   tags.forEach(function (tag) {
     var tagElem = document.createElement('span');
     tagElem.innerHTML = tag;
@@ -255,7 +255,6 @@ function getTags(markId) {
         .map(function (tag) {
           return tag.text;
         }));
-      renderHighlights(JSON.parse(this.response));
     }
   };
 
@@ -318,6 +317,8 @@ function sendComment(markId, comment) {
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
       var comment = JSON.parse(this.response);
+
+      renderComments([comment.text]);
     }
   };
 
@@ -331,7 +332,7 @@ function sendTags(markId, tags) {
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
-      var tags = JSON.parse(this.response);
+
     }
   };
 
