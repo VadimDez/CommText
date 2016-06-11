@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "version": "1.0",
+  "name": "CommText",
+  "description": "Highlight and comment text on any page",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "background",
+    "tabs"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
