@@ -22,6 +22,11 @@ var Comment = mongoose.model('Comment', {
   mark: String
 });
 
+var Tag = mongoose.model('Tag', {
+  text: String,
+  mark: String
+});
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -80,6 +85,36 @@ app.post('/sites/:site/marks/:id/comments', (req, res) => {
       return res.send(comment);
     });
   })
+});
+
+app.get('/sites/:site/marks/:id/tags', (req, res) => {
+  Tag.find({ mark: req.body.id }, (err, tags) => {
+    if (err) {
+      return res.status(400).end();
+    }
+
+    res.send(tags);
+  });
+});
+
+app.post('/sites/:site/marks/:id/tags', (req, res) => {
+  Mark.findOne({ _id: req.params.id }, (err, mark) => {
+    if (err) {
+      return res.status(400).end();
+    }
+
+    if (!mark) {
+      return res.status(404).end();
+    }
+
+    (new Tag({ text: req.body.comment, mark: mark._id })).save((err, tag) => {
+      if (err) {
+        return res.status(400).end();
+      }
+
+      return res.send(tag);
+    });
+  });
 });
 
 app.listen(PORT, () => {
