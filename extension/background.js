@@ -15,7 +15,7 @@ function cb(info, tab) {
   console.log('on:', info.pageUrl);
 
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {action: 'test'}, function(response) {
+    chrome.tabs.sendMessage(tabs[0].id, {action: 'highlight'}, function(response) {
       console.log(response);
     });
   });

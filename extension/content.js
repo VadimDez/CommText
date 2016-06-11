@@ -12,7 +12,7 @@ function sendMessage(message, cb) {
 
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
   switch (message.action) {
-    case "highlight": highlight();
+    case 'highlight': highlight();
       break;
   }
 });
@@ -23,11 +23,14 @@ function highlight() {
   highlightedText.text = selObj.toString();
   highlightedText.xPath = getElementXPath();
   var range = selObj.getRangeAt(0);
-  var selectionContents = range.extractContents();
+  range.insertNode(createNode(range.extractContents()));
+}
+
+function createNode(selectionContents) {
   var span = document.createElement("span");
   span.appendChild(selectionContents);
+  span.classList.add('commtext-extension');
   span.style.backgroundColor = "yellow";
-  range.insertNode(span);
 }
 
 function getElementXPath() {
