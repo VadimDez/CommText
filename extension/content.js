@@ -2,6 +2,7 @@
  * Created by Vadym Yatsyuk on 11/06/16
  */
 console.log('initialized');
+var API = 'https://commtext.herokuapp.com';
 var popup;
 addPopup();
 
@@ -25,6 +26,7 @@ function highlight() {
   range.insertNode(createNode(range.extractContents()));
 
   showPopup();
+  createLink();
 }
 
 function createNode(selectionContents) {
@@ -94,4 +96,18 @@ function addPopup() {
   popup.setAttribute('id', 'commtext-popup');
 
   document.body.appendChild(popup);
+}
+
+function createLink(data) {
+  var request = new XMLHttpRequest();
+  request.open('POST', API + '/marks', true);
+  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      var data = JSON.parse(this.response);
+    }
+  };
+
+  request.send(data);
 }
