@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 app.get('/sites/:site/marks', (req, res) => {
   Mark.find({ site: req.params.site}, (err, marks) => {
     if (err) {
-      return res.statusCode(400)
+      return res.status(400)
         .end();
     }
 
@@ -43,7 +43,7 @@ app.get('/sites/:site/marks', (req, res) => {
 app.post('/sites/:site/marks', (req, res) => {
   (new Mark({ site: req.params.site, text: req.body.text, xPath: req.body.xPath })).save((err, mark) => {
     if (err) {
-      return res.statusCode(400)
+      return res.status(400)
         .end();
     }
     
@@ -55,7 +55,7 @@ app.post('/sites/:site/marks', (req, res) => {
 app.get('/sites/:site/marks/:id/comments', (req, res) => {
   Comment.find({ mark: req.body.id }, (err, comments) => {
     if (err) {
-      return res.statusCode(400).end();
+      return res.status(400).end();
     }
 
     res.send(comments);
@@ -65,16 +65,16 @@ app.get('/sites/:site/marks/:id/comments', (req, res) => {
 app.post('/sites/:site/marks/:id/comments', (req, res) => {
   Mark.findOne({ _id: req.params.id }, (err, mark) => {
     if (err) {
-      return res.statusCode(400).end();
+      return res.status(400).end();
     }
 
     if (!mark) {
-      return res.statusCode(404).end();
+      return res.status(404).end();
     }
 
     (new Comment({ text: req.body.comment, mark: mark._id })).save((err, comment) => {
       if (err) {
-        return res.statusCode(400).end();
+        return res.status(400).end();
       }
 
       return res.send(comment);
