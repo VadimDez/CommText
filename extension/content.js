@@ -1,10 +1,9 @@
 /**
  * Created by Vadym Yatsyuk on 11/06/16
  */
-
-chrome.storage.sync.get('Color', function (result) {
-  color = result.Color;
-});
+console.log('initialized');
+var popup;
+addPopup();
 
 function sendMessage(message, cb) {
   chrome.runtime.sendMessage(message, cb);
@@ -24,13 +23,21 @@ function highlight() {
   highlightedText.xPath = getElementXPath();
   var range = selObj.getRangeAt(0);
   range.insertNode(createNode(range.extractContents()));
+
+  showPopup();
 }
 
 function createNode(selectionContents) {
   var span = document.createElement("span");
   span.appendChild(selectionContents);
   span.classList.add('commtext-extension');
-  span.style.backgroundColor = "yellow";
+  span.style.backgroundColor = '#FFFFAE';
+
+  span.addEventListener('click', function () {
+    console.log('primary action');
+  });
+
+  return span;
 }
 
 function getElementXPath() {
@@ -67,4 +74,24 @@ function getElementTreeXPath(element) {
 
   // Save the xpath
   return paths.length ? "/" + paths.join("/") : null;
+}
+
+function showPopup() {
+  popup.style.display = 'block';
+}
+
+function addPopup() {
+  popup = document.createElement('div');
+  popup.style.position = 'fixed';
+  popup.style.top = 0;
+  popup.style.bottom = 0;
+  popup.style.right = 0;
+  popup.style.width = '300px';
+  popup.style.backgroundColor = 'green';
+  popup.style['z-index'] = 9999;
+  popup.style.display = 'none';
+
+  popup.setAttribute('id', 'commtext-popup');
+
+  document.body.appendChild(popup);
 }
