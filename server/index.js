@@ -99,6 +99,7 @@ app.get('/sites/:site/marks/:id/tags', (req, res) => {
 
 app.post('/sites/:site/marks/:id/tags', (req, res) => {
   Mark.findOne({ _id: req.params.id }, (err, mark) => {
+    var tags = [];
     if (err) {
       return res.status(400).end();
     }
@@ -107,12 +108,18 @@ app.post('/sites/:site/marks/:id/tags', (req, res) => {
       return res.status(404).end();
     }
 
-    (new Tag({ text: req.body.comment, mark: mark._id })).save((err, tag) => {
+    req.body.tags.forEach((tag) => {
+      tags.push({
+        text: 
+      });
+    });
+    
+    Tag.create(, (err) => {
       if (err) {
         return res.status(400).end();
       }
 
-      return res.send(tag);
+      return res.status(201).end();
     });
   });
 });
