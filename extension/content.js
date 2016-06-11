@@ -5,7 +5,14 @@ console.log('initialized');
 var API = 'https://commtext.herokuapp.com';
 var popup;
 var markClass = 'commtext-marked';
-addPopup();
+var sendCommentCallback;
+
+main();
+
+function main() {
+  addPopup();
+  getMarks();
+}
 
 function sendMessage(message, cb) {
   chrome.runtime.sendMessage(message, cb);
@@ -80,7 +87,6 @@ function getElementTreeXPath(element) {
   return paths.length ? "/" + paths.join("/") : null;
 }
 
-var sendCommentCallback;
 
 function showPopup(markId) {
   popup.style.display = 'block';
@@ -90,9 +96,33 @@ function showPopup(markId) {
   }
 }
 
+function closePopup() {
+  popup.style.display = 'none';
+}
+
 function addPopup() {
   popup = document.createElement('div');
   popup.setAttribute('id', 'commtext-popup');
+  
+  var nav = document.createElement('div');
+  nav.setAttribute('id', 'commtext-popup__nav');
+  popup.appendChild(nav);
+
+  var closeButton = document.createElement('button');
+  closeButton.setAttribute('type', 'button');
+  closeButton.setAttribute('id', 'commtext-popup__nav__close-btn');
+  closeButton.innerHTML = 'Close';
+
+  closeButton.addEventListener('click', function () {
+    closePopup();
+  });
+
+  nav.appendChild(closeButton);
+
+  var logo = document.createElement('img');
+  logo.setAttribute('id', 'popup__nav__logo');
+  logo.setAttribute('src', 'http://d26uhratvi024l.cloudfront.net/gsc/89SNOO/24/85/8b/24858bc532264f72b51616d95a0e3ab4/images/artikelpage_leser/u42.png?token=7846536d56bfe40733345eee074692f4');
+  nav.appendChild(logo);
 
   var textareaContainer = document.createElement('div');
   textareaContainer.setAttribute('id', 'commtext-textarea-container');
@@ -131,8 +161,6 @@ function createMark(data) {
 
   request.send(data);
 }
-
-getMarks();
 
 function getMarks() {
   var request = new XMLHttpRequest();
