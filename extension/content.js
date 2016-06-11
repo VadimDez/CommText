@@ -4,6 +4,7 @@
 console.log('initialized');
 var API = 'https://commtext.herokuapp.com';
 var popup;
+var markClass = 'commtext-marked';
 addPopup();
 
 function sendMessage(message, cb) {
@@ -31,6 +32,7 @@ function highlight() {
 
 function createNode(selectionContents) {
   var span = document.createElement("span");
+  span.classList.add(markClass);
   span.appendChild(selectionContents);
   span.classList.add('commtext-extension');
   span.style.backgroundColor = '#FFFFAE';
@@ -78,12 +80,43 @@ function getElementTreeXPath(element) {
   return paths.length ? "/" + paths.join("/") : null;
 }
 
-function showPopup() {
+var sendCommentCallback;
+
+function showPopup(markId) {
   popup.style.display = 'block';
+
+  sendCommentCallback = function (comment) {
+    sendComment(markId, comment);
+  }
 }
 
 function addPopup() {
   popup = document.createElement('div');
+
+  var textareaContainer = document.createElement('div');
+  textareaContainer.setAttribute('id', 'commtext-textarea-container');
+  textareaContainer.style.margin = '10px';
+  var textarea = document.createElement('textarea');
+  textarea.style.width = '100%';
+
+  var commentTitle = document.createElement('h5');
+  commentTitle.innerHTML = 'Comment';
+  textareaContainer.appendChild(commentTitle);
+
+  textareaContainer.appendChild(textarea);
+  popup.appendChild(textareaContainer);
+
+  var button = document.createElement('button');
+  button.style['margin-top'] = '10px';
+  button.style.float = 'right';
+  button.setAttribute('type', 'button');
+  button.innerText = 'Comment';
+  button.addEventListener('click', function () {
+    sendCommentCallback(textarea.value);
+  });
+
+  textareaContainer.appendChild(button);
+
   popup.style.position = 'fixed';
   popup.style.top = 0;
   popup.style.bottom = 0;
@@ -138,13 +171,34 @@ function renderHighlights(marks) {
     var elem = document.evaluate(mark.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
 
     if (elem.singleNodeValue) {
-      elem.singleNodeValue.innerHTML = elem.singleNodeValue.innerHTML.replace(mark.text, replaceMark(mark.text));
+      elem.singleNodeValue.innerHTML = elem.singleNodeValue.innerHTML.replace(mark.text, replaceMark(mark));
     } else {
-      elem.innerHTML = elem.innerHTML.replace(mark.text, replaceMark(mark.text));
+      elem.innerHTML = elem.innerHTML.replace(mark.text, replaceMark(mark));
     }
   });
 }
 
-function replaceMark(text) {
-  return '<span style="background-color: #FFFFAF">' + text + '</span>';
+function replaceMark(mark) {
+  return '<span data-mark="' + mark._id + '" class="' + markClass + '" style="background-color: #FFFFAF">' + mark.text + '</span>';
 }
+
+function sendComment(markId, comment) {
+  var request = new XMLHttpRequest();
+  request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/comments', true);
+  request.setRequestHeader('Content-Type', 'application/json');
+
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      var comment = JSON.parse(this.response);
+    }
+  };
+
+  request.send(JSON.stringify({comment: comment}));
+}
+
+// main listener
+document.querySelector('body').addEventListener('click', function(evt) {
+  if (evt.target.classList.contains(markClass)) { // LOL
+    showPopup(evt.target.dataset.mark);
+  }
+}, true);
