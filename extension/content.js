@@ -12,7 +12,11 @@ var settings = {};
 
 function main() {
   clearMarked();
-  addPopup();
+
+  if (!popup) {
+    addPopup();
+  }
+  closePopup();
   getMarks();
 }
 
@@ -265,11 +269,14 @@ function clearAllChil(elem) {
 
 function getTags(markId) {
   var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags?access=' + settings.access + '&user=' + settings.pseudonym, true);
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags?access=' + settings.access +
+    '&user=' + settings.pseudonym +
+    '&group=' + settings.group, true);
   request.setRequestHeader('Content-Type', 'application/json');
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
+      console.log('tags', JSON.parse(this.response));
       renderTags(document.querySelector('#popup-tags__tags'), JSON.parse(this.response)
         .map(function (tag) {
           return tag.text;
@@ -283,7 +290,10 @@ function getTags(markId) {
 
 function getComments(markId) {
   var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments?access=' + settings.access + '&user=' + settings.pseudonym, true);
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments?access=' +
+    settings.access +
+    '&user=' + settings.pseudonym +
+    '&group=' + settings.group, true);
   request.setRequestHeader('Content-Type', 'application/json');
 
   request.onload = function() {
