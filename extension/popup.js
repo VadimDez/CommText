@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var settings = { access: 'public' };
+  var settings = { access: 'public', pseudonym: 'Unnamed' };
   var $groupElem = document.querySelector('#commtext-settings__group');
   var $groupInputElem = document.querySelector('#commtext-settings__group input');
   var $privateAccessElem = document.querySelector('#commtext-settings [name="access"][value="private"]');
