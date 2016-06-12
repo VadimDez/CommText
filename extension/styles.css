@@ -67,6 +67,10 @@
     float: right;
 }
 
+#commtext-textarea-container-comments .commtext-comment {
+    margin-bottom: 10px;
+}
+
 #commtext-textarea-container-comments .commtext-comment .commtext-comment-author {
     float: left;
 }
@@ -86,6 +90,12 @@
     float: left;
     margin-top: 25px;
     margin-left: 10px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#commtext-popup__nav__close-btn {
+    color: #000;
 }
 
 #popup__nav__logo {
@@ -114,12 +124,21 @@
     margin-bottom: 20px;
 }
 
-#popup-tags__tags span {
+#popup-tags__tags > span {
+    display: block;
+    float: left;
     border: 14px solid black;
     background-color: black;
     color: #fff;
     border-radius: 20px;
     margin-right: 7px;
+    margin-bottom: 7px;
+}
+
+#popup-tags__tags > span > span {
+    font-size: 10px;
+    line-height: 10px;
+    cursor: pointer;
 }
 
 .commtext-marked {

@@ -138,10 +138,9 @@ function addPopup() {
   nav.setAttribute('id', 'commtext-popup__nav');
   popup.appendChild(nav);
 
-  var closeButton = document.createElement('button');
-  closeButton.setAttribute('type', 'button');
+  var closeButton = document.createElement('span');
   closeButton.setAttribute('id', 'commtext-popup__nav__close-btn');
-  closeButton.innerHTML = 'Close';
+  closeButton.innerHTML = 'X Close';
 
   closeButton.addEventListener('click', function () {
     closePopup();
@@ -226,7 +225,7 @@ function addPopup() {
 function renderTags(elem, tags) {
   tags.forEach(function (tag) {
     var tagElem = document.createElement('span');
-    tagElem.innerHTML = tag;
+    tagElem.innerHTML = tag + ' <span>x</span>';
     elem.appendChild(tagElem);
   })
 }
