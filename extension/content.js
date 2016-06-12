@@ -19,12 +19,13 @@ var commentsLoaded = false;
 var tagsLoaded = false;
 var tagsCount = 0;
 var commentsCount = 0;
+var marksCount = 0;
 
 
 function main() {
   clearMarked();
 
-  updateCountLabel('');
+  updateCountLabel(marksCount);
   if (!popup) {
     addPopup();
   }
@@ -58,11 +59,13 @@ function highlight() {
   highlightedText.text = selObj.toString();
   highlightedText.xPath = getElementXPath();
   var range = selObj.getRangeAt(0);
-  var node = createNode(range.extractContents())
+  var node = createNode(range.extractContents());
   range.insertNode(node);
 
   showPopup();
   createMark(highlightedText, node);
+  marksCount++;
+  updateCountLabel(marksCount);
 }
 
 function createNode(selectionContents) {
@@ -268,6 +271,7 @@ function getMarks() {
       var marks = JSON.parse(this.response);
       renderHighlights(marks);
 
+      marksCount++;
       updateCountLabel(marks.length);
     }
   };
