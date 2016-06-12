@@ -9,7 +9,6 @@ var sendCommentCallback;
 var sendTagsCallback;
 var settings = {};
 
-main();
 
 function main() {
   addPopup();
@@ -22,13 +21,19 @@ function sendMessage(message, cb) {
 
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
   switch (message.action) {
-    case 'highlight': highlight();
+    case 'highlight':
+      highlight();
       break;
     case 'settings':
-      settings = message.settings || {};
+      loadSettings(message.settings);
       break;
   }
 });
+
+function loadSettings(_settings) {
+  settings = _settings || {};
+  main();
+}
 
 function highlight() {
   var selObj = window.getSelection();
