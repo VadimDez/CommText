@@ -14,6 +14,7 @@ var monthNames = [
   "August", "September", "October",
   "November", "December"
 ];
+var createdMark; // fallback
 
 
 function main() {
@@ -52,10 +53,11 @@ function highlight() {
   highlightedText.text = selObj.toString();
   highlightedText.xPath = getElementXPath();
   var range = selObj.getRangeAt(0);
-  range.insertNode(createNode(range.extractContents()));
+  var node = createNode(range.extractContents())
+  range.insertNode(node);
 
   showPopup();
-  createMark(highlightedText);
+  createMark(highlightedText, node);
 }
 
 function createNode(selectionContents) {
@@ -63,7 +65,6 @@ function createNode(selectionContents) {
   span.classList.add(markClass);
   span.appendChild(selectionContents);
   span.classList.add('commtext-extension');
-  span.style.backgroundColor = '#FFFFAE';
 
   span.addEventListener('click', function () {
     console.log('primary action');
@@ -116,10 +117,10 @@ function showPopup(markId) {
   clearComments();
   getComments(markId);
   sendCommentCallback = function (comment) {
-    sendComment(markId, comment);
+    sendComment(markId || createdMark, comment);
   };
   sendTagsCallback = function (tags) {
-    sendTags(markId, tags);
+    sendTags(markId || createdMark, tags);
   };
 }
 
@@ -226,7 +227,7 @@ function renderTags(elem, tags) {
   })
 }
 
-function createMark(highlightedText) {
+function createMark(highlightedText, node) {
   var request = new XMLHttpRequest();
   request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks', true);
   request.setRequestHeader('Content-Type', 'application/json');
@@ -234,6 +235,8 @@ function createMark(highlightedText) {
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
       var data = JSON.parse(this.response);
+      createdMark = data._id;
+      node.dataset.mark = createdMark;
     }
   };
 
