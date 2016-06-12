@@ -355,10 +355,14 @@ function sendComment(markId, comment) {
     if (this.status >= 200 && this.status < 400) {
       var comment = JSON.parse(this.response);
 
-      renderComments([comment]);
+      // renderComments([comment]); //takes too long
     }
   };
-
+  renderComments([{
+    text: comment,
+    user: settings.pseudonym,
+    created: new Date()
+  }]);
   request.send(JSON.stringify({
     comment: comment,
     access: settings.access,
