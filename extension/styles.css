@@ -1,14 +1,15 @@
 #commtext-popup {
     background-color: #F2F2F2 !important;
     position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
+    top: 10px;
+    bottom: 10px;
+    right: 10px;
     width: 450px;
     z-index: 99999;
     display: none;
     font-family: "Helvetica Neue", sans-serif;
     font-size: 15px;
+    border-left: 5px solid #00cccc;
 }
 
 #commtext-popup textarea {
@@ -70,6 +71,18 @@
 #commtext-textarea-container-comments .commtext-comment {
     margin-bottom: 10px;
 }
+#commtext-textarea-container-comments .commtext-comment-tools {
+    font-size: 10px;
+    float: right;
+}
+
+#commtext-textarea-container-comments .commtext-comment:after,
+#commtext-textarea-container-comments .commtext-comment::after
+{
+    content: '';
+    display: block;
+    clear: both;
+}
 
 #commtext-textarea-container-comments .commtext-comment .commtext-comment-author {
     float: left;
@@ -77,6 +90,7 @@
 
 #commtext-textarea-container-comments .commtext-comment .commtext-comment-created {
     float: right;
+    font-style: italic;
 }
 #commtext-textarea-container-comments .commtext-comment .commtext-comment-content {
     clear: both;
@@ -92,10 +106,7 @@
     margin-left: 10px;
     text-decoration: underline;
     cursor: pointer;
-}
-
-#commtext-popup__nav__close-btn {
-    color: #000;
+    color: #00cccc;
 }
 
 #popup__nav__logo {

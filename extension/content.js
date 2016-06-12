@@ -15,6 +15,8 @@ var monthNames = [
   "November", "December"
 ];
 var createdMark; // fallback
+var commentsLoaded = false;
+var tagsLoaded = false;
 
 
 function main() {
@@ -353,7 +355,7 @@ function renderComments(comments) {
     var year = date.getFullYear();
 
     commentElem.classList.add('commtext-comment');
-    commentElem.innerHTML = '<div><div><span class="commtext-comment-author">' + comment.user + '</span> <span class="commtext-comment-created">' + day + ' ' + monthNames[monthIndex] + ' ' + year + '</span></div><div class="commtext-comment-content">' + comment.text + '</div></div>';
+    commentElem.innerHTML = '<div><div><span class="commtext-comment-author">' + comment.user + '</span> <span class="commtext-comment-created">' + day + ' ' + monthNames[monthIndex] + ' ' + year + '</span></div><div class="commtext-comment-content">' + comment.text + '</div><div class="commtext-comment-tools"><span>Reply</span></div></div>';
     elem.appendChild(commentElem);
   });
 }
@@ -431,6 +433,10 @@ function clearMarked() {
 
     $elements[i].parentElement.innerHTML = $elements[i].parentElement.innerHTML.replace($elements[i].outerHTML, $elements[i].innerHTML);
   }
+}
+
+function updateCountLabel() {
+
 }
 
 // main listener
