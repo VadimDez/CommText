@@ -17,7 +17,8 @@ var Mark = mongoose.model('Mark', {
   site: String,
   access: String,
   user: String,
-  group: String
+  group: String,
+  created: { type: Date, default: Date.now }
 });
 
 var Comment = mongoose.model('Comment', {
@@ -25,7 +26,8 @@ var Comment = mongoose.model('Comment', {
   mark: String,
   access: String,
   user: String,
-  group: String
+  group: String,
+  created: { type: Date, default: Date.now }
 });
 
 var Tag = mongoose.model('Tag', {
@@ -33,7 +35,8 @@ var Tag = mongoose.model('Tag', {
   mark: String,
   access: String,
   user: String,
-  group: String
+  group: String,
+  created: { type: Date, default: Date.now }
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
