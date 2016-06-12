@@ -213,7 +213,6 @@ function addPopup() {
 }
 
 function renderTags(elem, tags) {
-  console.log(tags);
   tags.forEach(function (tag) {
     var tagElem = document.createElement('span');
     tagElem.innerHTML = tag;
@@ -276,7 +275,6 @@ function getTags(markId) {
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
-      console.log('tags', JSON.parse(this.response));
       renderTags(document.querySelector('#popup-tags__tags'), JSON.parse(this.response)
         .map(function (tag) {
           return tag.text;
