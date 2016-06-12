@@ -230,7 +230,7 @@ function createMark(data) {
 
 function getMarks() {
   var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks', true);
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks?access='+ settings.access + '&user=' + settings.pseudonym, true);
   request.setRequestHeader('Content-Type', 'application/json');
 
   request.onload = function() {
