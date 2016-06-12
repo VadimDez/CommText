@@ -92,6 +92,18 @@ app.post('/sites/:site/marks', (req, res) => {
 });
 
 
+app.delete('/sites/:site/marks/:id', (req, res) => {
+
+  Mark.remove({ _id: req.params.id }, (err, mark) => {
+    if (err) {
+      return res.status(400).end();
+    }
+
+    res.status(200).end();
+  });
+});
+
+
 app.get('/sites/:site/marks/:id/comments', (req, res) => {
   var filter = {
     _id: req.params.id,
@@ -170,7 +182,7 @@ app.get('/sites/:site/marks/:id/tags', (req, res) => {
 
     if (req.query.access === 'private') {
       filter.access = 'private';
-      
+
       if (req.query.group) {
         filter.group = req.query.group;
       } else {
