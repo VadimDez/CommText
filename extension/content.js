@@ -17,11 +17,14 @@ var monthNames = [
 var createdMark; // fallback
 var commentsLoaded = false;
 var tagsLoaded = false;
+var tagsCount = 0;
+var commentsCount = 0;
 
 
 function main() {
   clearMarked();
 
+  updateCountLabel('');
   if (!popup) {
     addPopup();
   }
@@ -262,7 +265,10 @@ function getMarks() {
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
-      renderHighlights(JSON.parse(this.response));
+      var marks = JSON.parse(this.response);
+      renderHighlights(marks);
+
+      updateCountLabel(marks.length);
     }
   };
 
@@ -297,7 +303,9 @@ function getTags(markId) {
           return tag.text;
         }));
 
+      tagsLoaded = true;
       count = tags.length;
+      tagsCount = count;
     }
 
     document.querySelector('#popup-tags__tags_count').innerHTML = '(' + count + ')';
@@ -307,7 +315,7 @@ function getTags(markId) {
     if (request.readyState === 4 && request.status >= 400) {
       document.querySelector('#popup-tags__tags_count').innerHTML = '(0)';
     }
-  }
+  };
 
   request.send();
 }
@@ -327,10 +335,10 @@ function getComments(markId) {
       var comments = JSON.parse(this.response);
       renderComments(comments);
       count = comments.length;
-    } else {
-      count = 0;
     }
 
+    commentsLoaded = true;
+    commentsCount = count;
     document.querySelector('#commtext-textarea-container__comments-count').innerHTML = '(' + count + ')';
   };
 
@@ -435,8 +443,8 @@ function clearMarked() {
   }
 }
 
-function updateCountLabel() {
-
+function updateCountLabel(count) {
+  sendMessage({action: 'count', count: count});
 }
 
 // main listener
