@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.querySelector('#commtext-settings__save').addEventListener('click', function () {
     settings = {
-      pseudonym: $nameElemvalue,
+      pseudonym: $nameElem.value,
       access: getSelectedAccess(),
       group: $groupInputElem.value || null
     };
