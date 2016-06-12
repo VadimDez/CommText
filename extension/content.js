@@ -7,6 +7,7 @@ var popup;
 var markClass = 'commtext-marked';
 var sendCommentCallback;
 var sendTagsCallback;
+var deleteMarkCallback;
 var settings = {};
 var monthNames = [
   "January", "February", "March",
@@ -132,6 +133,9 @@ function showPopup(markId) {
   sendTagsCallback = function (tags) {
     sendTags(markId || createdMark, tags);
   };
+  deleteMarkCallback = function () {
+    deleteMark(markId || createdMark);
+  }
 }
 
 function closePopup() {
@@ -156,10 +160,15 @@ function addPopup() {
 
   nav.appendChild(closeButton);
 
-  var logo = document.createElement('img');
-  logo.setAttribute('id', 'popup__nav__logo');
-  logo.setAttribute('src', 'http://d26uhratvi024l.cloudfront.net/gsc/89SNOO/24/85/8b/24858bc532264f72b51616d95a0e3ab4/images/artikelpage_leser/u42.png?token=7846536d56bfe40733345eee074692f4');
-  nav.appendChild(logo);
+  var deleteButton = document.createElement('button');
+  deleteButton.setAttribute('id', 'popup__nav__delete-btn');
+  deleteButton.innerHTML = 'Delete';
+
+  deleteButton.addEventListener('click', function () {
+    deleteMarkCallback()
+  });
+
+  nav.appendChild(deleteButton);
 
   var tagsContainer = document.createElement('div');
   tagsContainer.setAttribute('id', 'popup-tags');
@@ -275,6 +284,27 @@ function getMarks() {
       updateCountLabel(marks.length);
     }
   };
+
+  request.send();
+}
+
+
+function deleteMark(markId) {
+  var request = new XMLHttpRequest();
+  request.open('DELETE', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId, true);
+  request.setRequestHeader('Content-Type', 'application/json');
+
+  // request.onload = function() {
+  //   if (this.status >= 200 && this.status < 400) {
+  //   }
+  // };
+
+  var $markedElem = document.querySelector('.' + markClass + '[data-mark="' + markId + '"]');
+  
+  if ($markedElem) {
+    clearMarkFromElement($markedElem);
+    closePopup();
+  }
 
   request.send();
 }
@@ -441,10 +471,13 @@ function clearMarked() {
   var count = $elements.length;
 
   for (var i = 0; i < count; i++) {
-    $elements[i].classList.remove(markClass);
-
-    $elements[i].parentElement.innerHTML = $elements[i].parentElement.innerHTML.replace($elements[i].outerHTML, $elements[i].innerHTML);
+    clearMarkFromElement($elements[i]);
   }
+}
+
+function clearMarkFromElement($element) {
+  $element.classList.remove(markClass);
+  $element.parentElement.innerHTML = $element.parentElement.innerHTML.replace($element.outerHTML, $element.innerHTML);
 }
 
 function updateCountLabel(count) {
