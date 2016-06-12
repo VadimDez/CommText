@@ -7,24 +7,32 @@
     <script src="popup.js"></script>
 </head>
 <body>
-
+    <nav id="commtext-nav">
+        CommText
+    </nav>
     <div id="commtext-settings">
         <div>
             <label>Pseudonym</label>
             <input type="text" name="pseudonym" placeholder="Pseudonym">
         </div>
-        <div>
-            <input type="radio" value="public" name="access"> Public
-        </div>
-        <div>
-            <input type="radio" value="private" name="access"> Private
+
+        <div id="commtext-access">
+            <div>
+                Access
+            </div>
+            <div>
+                <input type="radio" value="public" name="access"> Public
+            </div>
+            <div>
+                <input type="radio" value="private" name="access"> Private
+            </div>
         </div>
         <div id="commtext-settings__group">
             <label>Group</label>
             <input type="text" placeholder="Group">
         </div>
         <div>
-            <button id="commtext-settings__save">Go</button>
+            <button id="commtext-settings__save">Save</button>
         </div>
     </div>
 </body>
