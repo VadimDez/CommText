@@ -1,3 +1,5 @@
 .idea/
 server/Procfile
 server/node_modules/
+server/.gitignore
+server/.git
