@@ -229,13 +229,17 @@ function createMark(highlightedText) {
 
   request.send(JSON.stringify(Object.assign({}, highlightedText, {
     access: settings.access,
-    user: settings.pseudonym
+    user: settings.pseudonym,
+    group: settings.group
   })));
 }
 
 function getMarks() {
   var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks?access='+ settings.access + '&user=' + settings.pseudonym, true);
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks?access='+
+    settings.access +
+    '&user=' + settings.pseudonym +
+    '&group=' + settings.group, true);
   request.setRequestHeader('Content-Type', 'application/json');
 
   request.onload = function() {
@@ -339,7 +343,8 @@ function sendComment(markId, comment) {
   request.send(JSON.stringify({
     comment: comment,
     access: settings.access,
-    user: settings.pseudonym
+    user: settings.pseudonym,
+    group: settings.group
   }));
 }
 
@@ -351,7 +356,8 @@ function sendTags(markId, tags) {
   request.send(JSON.stringify({
     tags: tags,
     access: settings.access,
-    user: settings.pseudonym
+    user: settings.pseudonym,
+    group: settings.group
   }));
 }
 
