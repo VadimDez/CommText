@@ -16,21 +16,24 @@ var Mark = mongoose.model('Mark', {
   xPath: String,
   site: String,
   access: String,
-  user: String
+  user: String,
+  group: String
 });
 
 var Comment = mongoose.model('Comment', {
   text: String,
   mark: String,
   access: String,
-  user: String
+  user: String,
+  group: String
 });
 
 var Tag = mongoose.model('Tag', {
   text: String,
   mark: String,
   access: String,
-  user: String
+  user: String,
+  group: String
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
