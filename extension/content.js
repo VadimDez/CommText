@@ -170,6 +170,7 @@ function addPopup() {
     if (tagsArray.length) {
       renderTags(tags, tagsArray);
       sendTagsCallback(tagsArray);
+      tagsTextarea.value = '';
     }
   });
 
@@ -197,6 +198,7 @@ function addPopup() {
   button.innerText = 'Comment';
   button.addEventListener('click', function () {
     sendCommentCallback(textarea.value);
+    textarea.value = '';
   });
 
   textareaContainer.appendChild(button);
