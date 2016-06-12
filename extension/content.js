@@ -112,6 +112,8 @@ function getElementTreeXPath(element) {
 
 function showPopup(markId) {
   popup.style.display = 'block';
+  document.querySelector('#commtext-textarea-container__comments-count').innerHTML = 'Loading...';
+  document.querySelector('#popup-tags__tags_count').innerHTML = 'Loading...';
   clearTags();
   getTags(markId);
   clearComments();
