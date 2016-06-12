@@ -10,7 +10,7 @@
 }
 
 #commtext-textarea-container {
-    margin:  10px;
+    margin: 30px 10px 10px;
 }
 #commtext-textarea-container textarea {
     width:  100%;
@@ -18,6 +18,17 @@
 #commtext-textarea-container button {
     margin-top: 10px;
     float: right;
+}
+
+#commtext-textarea-container-comments .commtext-comment .commtext-comment-author {
+    float: left;
+}
+
+#commtext-textarea-container-comments .commtext-comment .commtext-comment-created {
+    float: right;
+}
+#commtext-textarea-container-comments .commtext-comment .commtext-comment-content {
+    clear: both;
 }
 
 #commtext-popup__nav {

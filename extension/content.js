@@ -8,6 +8,12 @@ var markClass = 'commtext-marked';
 var sendCommentCallback;
 var sendTagsCallback;
 var settings = {};
+var monthNames = [
+  "January", "February", "March",
+  "April", "May", "June", "July",
+  "August", "September", "October",
+  "November", "December"
+];
 
 
 function main() {
@@ -296,9 +302,7 @@ function getComments(markId) {
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
-      renderComments(JSON.parse(this.response).map(function (comment) {
-        return comment.text;
-      }));
+      renderComments(JSON.parse(this.response));
     }
   };
 
@@ -309,8 +313,14 @@ function renderComments(comments) {
   var elem = document.querySelector('#commtext-textarea-container-comments');
   comments.forEach(function (comment) {
     var commentElem = document.createElement('div');
+
+    var date = new Date(comment.created);
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+
     commentElem.classList.add('commtext-comment');
-    commentElem.innerHTML = comment;
+    commentElem.innerHTML = '<div><div><span class="commtext-comment-author">' + comment.user + '</span> <span class="commtext-comment-created">' + day + ' ' + monthNames[monthIndex] + ' ' + year + '</span></div><div class="commtext-comment-content">' + comment.text + '</div></div>';
     elem.appendChild(commentElem);
   });
 }
@@ -345,7 +355,7 @@ function sendComment(markId, comment) {
     if (this.status >= 200 && this.status < 400) {
       var comment = JSON.parse(this.response);
 
-      renderComments([comment.text]);
+      renderComments([comment]);
     }
   };
 
