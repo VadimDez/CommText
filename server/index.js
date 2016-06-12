@@ -81,7 +81,17 @@ app.post('/sites/:site/marks', (req, res) => {
 
 
 app.get('/sites/:site/marks/:id/comments', (req, res) => {
-  Mark.findOne({ _id: req.params.id }, (err, mark) => {
+  var filter = {
+    _id: req.params.id,
+    access: 'public'
+  };
+
+  if (req.query.access === 'private') {
+    filter.access = 'private';
+    filter.user = req.query.user;
+  }
+
+  Mark.findOne(filter, (err, mark) => {
     if (err) {
       return res.status(400).end();
     }
@@ -110,7 +120,12 @@ app.post('/sites/:site/marks/:id/comments', (req, res) => {
       return res.status(404).end();
     }
 
-    (new Comment({ text: req.body.comment, mark: mark._id })).save((err, comment) => {
+    (new Comment({
+      text: req.body.comment,
+      mark: mark._id,
+      access: req.body.access,
+      user: req.body.user
+    })).save((err, comment) => {
       if (err) {
         return res.status(400).end();
       }
@@ -130,7 +145,17 @@ app.get('/sites/:site/marks/:id/tags', (req, res) => {
       return res.status(404).end();
     }
 
-    Tag.find({mark: mark._id}, (err, tags) => {
+    var filter = {
+      mark: mark._id,
+      access: 'public'
+    };
+
+    if (req.query.access === 'private') {
+      filter.access = 'private';
+      filter.user = req.query.user;
+    }
+
+    Tag.find(filter, (err, tags) => {
       if (err) {
         return res.status(400).end();
       }
@@ -154,7 +179,9 @@ app.post('/sites/:site/marks/:id/tags', (req, res) => {
     req.body.tags.forEach((tag) => {
       tags.push({
         text: tag,
-        mark: mark._id
+        mark: mark._id,
+        access: req.body.access,
+        user: req.body.user
       });
     });
     
