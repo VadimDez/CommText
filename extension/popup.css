@@ -1,3 +1,7 @@
 #commtext-settings button {
     width: 100%;
 }
+
+#commtext-settings__group {
+    display: none;
+}
