@@ -11,6 +11,7 @@ var settings = {};
 
 
 function main() {
+  clearMarked();
   addPopup();
   getMarks();
 }
@@ -324,7 +325,7 @@ function renderHighlights(marks) {
 }
 
 function replaceMark(mark) {
-  return '<span data-mark="' + mark._id + '" class="' + markClass + '" style="background-color: #FFFFAF">' + mark.text + '</span>';
+  return '<span data-mark="' + mark._id + '" class="' + markClass + '">' + mark.text + '</span>';
 }
 
 function sendComment(markId, comment) {
@@ -359,6 +360,17 @@ function sendTags(markId, tags) {
     user: settings.pseudonym,
     group: settings.group
   }));
+}
+
+function clearMarked() {
+  var $elements = document.querySelectorAll('.' + markClass);
+  var count = $elements.length;
+
+  for (var i = 0; i < count; i++) {
+    $elements[i].classList.remove(markClass);
+
+    $elements[i].parentElement.innerHTML = $elements[i].parentElement.innerHTML.replace($elements[i].outerHTML, $elements[i].innerHTML);
+  }
 }
 
 // main listener
