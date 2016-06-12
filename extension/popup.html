@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>Popup Page</title>
     <link rel="stylesheet" href="popup.css">
+    <script src="popup.js"></script>
 </head>
 <body>
 
     <div id="commtext-settings">
         <div>
             <label>Pseudonym</label>
-            <input type="text" placeholder="Pseudonym">
+            <input type="text" name="pseudonym" placeholder="Pseudonym">
         </div>
         <div>
             <input type="radio" value="public" name="access"> Public
@@ -19,7 +20,7 @@
             <input type="radio" value="private" name="access"> Private
         </div>
         <div>
-            <button>Go</button>
+            <button id="commtext-settings__save">Go</button>
         </div>
     </div>
 </body>

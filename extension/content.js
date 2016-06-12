@@ -7,6 +7,7 @@ var popup;
 var markClass = 'commtext-marked';
 var sendCommentCallback;
 var sendTagsCallback;
+var settings = {};
 
 main();
 
@@ -22,6 +23,9 @@ function sendMessage(message, cb) {
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
   switch (message.action) {
     case 'highlight': highlight();
+      break;
+    case 'settings':
+      settings = message.settings || {};
       break;
   }
 });
