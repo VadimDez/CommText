@@ -156,7 +156,7 @@ function addPopup() {
   tagsContainer.setAttribute('id', 'popup-tags');
 
   var tagsTitle = document.createElement('h5');
-  tagsTitle.innerHTML = 'Tags';
+  tagsTitle.innerHTML = 'Tags <span id="popup-tags__tags_count">Loading...</span>';
   tagsContainer.appendChild(tagsTitle);
 
   var tags = document.createElement('div');
@@ -180,6 +180,8 @@ function addPopup() {
       });
 
     if (tagsArray.length) {
+      var str = document.querySelector('#popup-tags__tags_count').innerHTML.substr(1);
+      document.querySelector('#popup-tags__tags_count').innerHTML = '(' + (parseInt(str.substr(0, str.length - 1), 10) + tagsArray.length) + ')';
       renderTags(tags, tagsArray);
       sendTagsCallback(tagsArray);
       tagsTextarea.value = '';
@@ -195,7 +197,7 @@ function addPopup() {
   var textarea = document.createElement('textarea');
 
   var commentTitle = document.createElement('h5');
-  commentTitle.innerHTML = 'Comment';
+  commentTitle.innerHTML = 'Comments <span id="commtext-textarea-container__comments-count">Loading...</span>';
   textareaContainer.appendChild(commentTitle);
 
   var comments = document.createElement('div');
@@ -284,7 +286,10 @@ function getTags(markId) {
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
-      renderTags(document.querySelector('#popup-tags__tags'), JSON.parse(this.response)
+var tags = JSON.parse(this.response);
+      document.querySelector('#popup-tags__tags_count').innerHTML = '(' + tags.length + ')';
+
+      renderTags(document.querySelector('#popup-tags__tags'), tags
         .map(function (tag) {
           return tag.text;
         }));
@@ -305,7 +310,9 @@ function getComments(markId) {
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
-      renderComments(JSON.parse(this.response));
+      var comments = JSON.parse(this.response);
+      renderComments(comments);
+      document.querySelector('#commtext-textarea-container__comments-count').innerHTML = '(' + comments.length + ')';
     }
   };
 
@@ -366,6 +373,11 @@ function sendComment(markId, comment) {
     user: settings.pseudonym,
     created: new Date()
   }]);
+
+  // update count + 1
+  var str = document.querySelector('#commtext-textarea-container__comments-count').innerHTML.substr(1);
+  document.querySelector('#commtext-textarea-container__comments-count').innerHTML = '(' + (parseInt(str.substr(0, str.length - 1), 10) + 1) + ')';
+
   request.send(JSON.stringify({
     comment: comment,
     access: settings.access,
