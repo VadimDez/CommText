@@ -258,7 +258,7 @@ function clearAllChil(elem) {
 
 function getTags(markId) {
   var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags', true);
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags?access=' + settings.access + '&user=' + settings.pseudonym, true);
   request.setRequestHeader('Content-Type', 'application/json');
 
   request.onload = function() {
@@ -276,7 +276,7 @@ function getTags(markId) {
 
 function getComments(markId) {
   var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments', true);
+  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments?access=' + settings.access + '&user=' + settings.pseudonym, true);
   request.setRequestHeader('Content-Type', 'application/json');
 
   request.onload = function() {
@@ -334,7 +334,11 @@ function sendComment(markId, comment) {
     }
   };
 
-  request.send(JSON.stringify({comment: comment}));
+  request.send(JSON.stringify({
+    comment: comment,
+    access: settings.access,
+    user: settings.pseudonym
+  }));
 }
 
 function sendTags(markId, tags) {
@@ -342,13 +346,11 @@ function sendTags(markId, tags) {
   request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/tags', true);
   request.setRequestHeader('Content-Type', 'application/json');
 
-  request.onload = function() {
-    if (this.status >= 200 && this.status < 400) {
-
-    }
-  };
-
-  request.send(JSON.stringify({tags: tags}));
+  request.send(JSON.stringify({
+    tags: tags,
+    access: settings.access,
+    user: settings.pseudonym
+  }));
 }
 
 // main listener
