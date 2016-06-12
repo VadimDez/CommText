@@ -44,7 +44,7 @@ function highlight() {
   range.insertNode(createNode(range.extractContents()));
 
   showPopup();
-  createMark(JSON.stringify(highlightedText));
+  createMark(highlightedText);
 }
 
 function createNode(selectionContents) {
@@ -214,7 +214,7 @@ function renderTags(elem, tags) {
   })
 }
 
-function createMark(data) {
+function createMark(highlightedText) {
   var request = new XMLHttpRequest();
   request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks', true);
   request.setRequestHeader('Content-Type', 'application/json');
@@ -225,7 +225,10 @@ function createMark(data) {
     }
   };
 
-  request.send(data);
+  request.send(JSON.stringify(Object.assign({}, highlightedText, {
+    access: settings.access,
+    user: settings.pseudonym
+  })));
 }
 
 function getMarks() {

@@ -63,7 +63,13 @@ app.get('/sites/:site/marks', (req, res) => {
 });
 
 app.post('/sites/:site/marks', (req, res) => {
-  (new Mark({ site: req.params.site, text: req.body.text, xPath: req.body.xPath })).save((err, mark) => {
+  (new Mark({
+    site: req.params.site,
+    text: req.body.text,
+    xPath: req.body.xPath,
+    access: req.body.access,
+    user: req.body.user
+  })).save((err, mark) => {
     if (err) {
       return res.status(400)
         .end();
