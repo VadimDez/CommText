@@ -54,8 +54,12 @@ app.get('/sites/:site/marks', (req, res) => {
 
   if (req.query.access === 'private') {
     filter.access = 'private';
-    filter.user = req.query.user;
-    filter.group = req.query.group;
+
+    if (req.query.group) {
+      filter.group = req.query.group;
+    } else {
+      filter.user = req.query.user;
+    }
   }
 
   Mark.find(filter, (err, marks) => {
@@ -96,8 +100,12 @@ app.get('/sites/:site/marks/:id/comments', (req, res) => {
 
   if (req.query.access === 'private') {
     filter.access = 'private';
-    filter.user = req.query.user;
-    filter.group = req.query.group;
+
+    if (req.query.group) {
+      filter.group = req.query.group;
+    } else {
+      filter.user = req.query.user;
+    }
   }
 
   Mark.findOne(filter, (err, mark) => {
@@ -162,8 +170,12 @@ app.get('/sites/:site/marks/:id/tags', (req, res) => {
 
     if (req.query.access === 'private') {
       filter.access = 'private';
-      filter.user = req.query.user;
-      filter.group = req.query.group;
+      
+      if (req.query.group) {
+        filter.group = req.query.group;
+      } else {
+        filter.user = req.query.user;
+      }
     }
 
     Tag.find(filter, (err, tags) => {
