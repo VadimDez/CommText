@@ -14,17 +14,23 @@ mongoose.connect('mongodb://' + process.env.MONGODB);
 var Mark = mongoose.model('Mark', {
   text: String,
   xPath: String,
-  site: String
+  site: String,
+  access: String,
+  user: String
 });
 
 var Comment = mongoose.model('Comment', {
   text: String,
-  mark: String
+  mark: String,
+  access: String,
+  user: String
 });
 
 var Tag = mongoose.model('Tag', {
   text: String,
-  mark: String
+  mark: String,
+  access: String,
+  user: String
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -35,7 +41,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sites/:site/marks', (req, res) => {
-  Mark.find({ site: req.params.site}, (err, marks) => {
+  var filter = {
+    site: req.params.site,
+    access: 'public'
+  };
+
+  if (req.query.access === 'private') {
+    filter.access = 'private';
+    filter.user = req.query.user;
+  }
+
+  Mark.find(filter, (err, marks) => {
+    
     if (err) {
       return res.status(400)
         .end();
