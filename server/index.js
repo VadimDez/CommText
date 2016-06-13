@@ -47,58 +47,7 @@ app.get('/', (req, res) => {
 
 app.use('/sites/:site/marks', require('./marks/marks.controller'));
 
-app.get('/sites/:site/marks/:id/comments', (req, res) => {
-  var filter = {
-    _id: req.params.id,
-    access: 'public'
-  };
-
-  Object.assign(filter, accessFilter(req));
-
-  Mark.findOne(filter, (err, mark) => {
-    if (err) {
-      return res.status(400).end();
-    }
-
-    if (!mark) {
-      return res.status(404).end();
-    }
-
-    Comment.find({ mark: mark._id }, (err, comments) => {
-      if (err) {
-        return res.status(400).end();
-      }
-
-      res.send(comments);
-    });
-  });
-});
-
-app.post('/sites/:site/marks/:id/comments', (req, res) => {
-  Mark.findOne({ _id: req.params.id }, (err, mark) => {
-    if (err) {
-      return res.status(400).end();
-    }
-
-    if (!mark) {
-      return res.status(404).end();
-    }
-
-    (new Comment({
-      text: req.body.comment,
-      mark: mark._id,
-      access: req.body.access,
-      user: req.body.user,
-      group: req.body.group
-    })).save((err, comment) => {
-      if (err) {
-        return res.status(400).end();
-      }
-
-      return res.send(comment);
-    });
-  })
-});
+app.use('/sites/:site/marks/:id/comments', require('./comments/comments.controller'));
 
 app.get('/sites/:site/marks/:id/tags', (req, res) => {
   Mark.findOne({ _id: req.params.id }, (err, mark) => {
