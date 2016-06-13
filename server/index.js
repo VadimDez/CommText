@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 8888;
 
-// mongoose.connect('mongodb://' + process.env.MONGODB);
+mongoose.connect('mongodb://' + process.env.MONGODB);
 
 var Mark = require('./marks/Mark.model');
 
