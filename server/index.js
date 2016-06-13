@@ -232,5 +232,5 @@ app.post('/sites/:site/marks/:id/tags', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Server started');
+  console.log(`Server started on port: ${ PORT }`);
 });
