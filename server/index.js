@@ -9,17 +9,9 @@ var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 8888;
 
-mongoose.connect('mongodb://' + process.env.MONGODB);
+// mongoose.connect('mongodb://' + process.env.MONGODB);
 
-var Mark = mongoose.model('Mark', {
-  text: String,
-  xPath: String,
-  site: String,
-  access: String,
-  user: String,
-  group: String,
-  created: { type: Date, default: Date.now }
-});
+var Mark = require('./marks/Mark.model');
 
 var Comment = mongoose.model('Comment', {
   text: String,
