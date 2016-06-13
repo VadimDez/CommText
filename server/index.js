@@ -11,13 +11,35 @@ var PORT = process.env.PORT || 8888;
 
 mongoose.connect('mongodb://' + process.env.MONGODB);
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 var Mark = require('./marks/Mark.model');
 var Tag = require('./tags/Tag.model');
 var Comment = require('./comments/Comment.model');
 
+/**
+ * Create filter based on access
+ * @param req
+ * @returns {{}}
+ */
+const accessFilter = (req) => {
+  var filter = {};
+  if (req.query.access !== 'private') {
+    return filter;
+  }
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+  filter.access = 'private';
+
+  if (req.query.group) {
+    filter.group = req.query.group;
+  } else {
+    filter.user = req.query.user;
+  }
+
+  return filter;
+};
+
 
 app.get('/', (req, res) => {
   res.end();
@@ -29,15 +51,7 @@ app.get('/sites/:site/marks', (req, res) => {
     access: 'public'
   };
 
-  if (req.query.access === 'private') {
-    filter.access = 'private';
-
-    if (req.query.group) {
-      filter.group = req.query.group;
-    } else {
-      filter.user = req.query.user;
-    }
-  }
+  Object.assign(filter, accessFilter(req));
 
   Mark.find(filter, (err, marks) => {
     
@@ -87,15 +101,7 @@ app.get('/sites/:site/marks/:id/comments', (req, res) => {
     access: 'public'
   };
 
-  if (req.query.access === 'private') {
-    filter.access = 'private';
-
-    if (req.query.group) {
-      filter.group = req.query.group;
-    } else {
-      filter.user = req.query.user;
-    }
-  }
+  Object.assign(filter, accessFilter(req));
 
   Mark.findOne(filter, (err, mark) => {
     if (err) {
@@ -157,15 +163,7 @@ app.get('/sites/:site/marks/:id/tags', (req, res) => {
       access: 'public'
     };
 
-    if (req.query.access === 'private') {
-      filter.access = 'private';
-
-      if (req.query.group) {
-        filter.group = req.query.group;
-      } else {
-        filter.user = req.query.user;
-      }
-    }
+    Object.assign(filter, accessFilter(req));
 
     Tag.find(filter, (err, tags) => {
       if (err) {
