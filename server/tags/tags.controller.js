@@ -10,12 +10,12 @@ var Tag = require('./Tag.model');
 var helper = require('./../helper');
 
 
-router.get('/', (req, res) => {
+router.get('/:id/tags', (req, res) => {
   Mark.findOne({ _id: req.params.id }, (err, mark) => {
     if (err) {
       return res.status(400).end();
     }
-
+    
     if (!mark) {
       return res.status(404).end();
     }
@@ -37,7 +37,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/', (req, res) => {
+router.post('/:id/tags', (req, res) => {
   Mark.findOne({ _id: req.params.id }, (err, mark) => {
     var tags = [];
     if (err) {

@@ -8,7 +8,7 @@ var Mark = require('./../marks/Mark.model');
 var Comment = require('./Comment.model');
 var helper = require('./../helper');
 
-router.get('/', (req, res) => {
+router.get('/:id/comments', (req, res) => {
   var filter = {
     _id: req.params.id,
     access: 'public'
@@ -35,7 +35,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/', (req, res) => {
+router.post('/:id/comments', (req, res) => {
   Mark.findOne({ _id: req.params.id }, (err, mark) => {
     if (err) {
       return res.status(400).end();

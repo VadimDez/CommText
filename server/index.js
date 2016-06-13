@@ -47,9 +47,9 @@ app.get('/', (req, res) => {
 
 app.use('/sites/:site/marks', require('./marks/marks.controller'));
 
-app.use('/sites/:site/marks/:id/comments', require('./comments/comments.controller'));
+app.use('/sites/:site/marks', require('./comments/comments.controller'));
 
-app.use('/sites/:site/marks/:id/tags', require('./tags/tags.controller'));
+app.use('/sites/:site/marks', require('./tags/tags.controller'));
 
 app.listen(PORT, () => {
   console.log(`Server started on port: ${ PORT }`);
