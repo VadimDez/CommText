@@ -45,55 +45,7 @@ app.get('/', (req, res) => {
   res.end();
 });
 
-app.get('/sites/:site/marks', (req, res) => {
-  var filter = {
-    site: req.params.site,
-    access: 'public'
-  };
-
-  Object.assign(filter, accessFilter(req));
-
-  Mark.find(filter, (err, marks) => {
-    
-    if (err) {
-      return res.status(400)
-        .end();
-    }
-
-    res.send(marks);
-  });
-});
-
-app.post('/sites/:site/marks', (req, res) => {
-  (new Mark({
-    site: req.params.site,
-    text: req.body.text,
-    xPath: req.body.xPath,
-    access: req.body.access,
-    user: req.body.user,
-    group: req.body.group
-  })).save((err, mark) => {
-    if (err) {
-      return res.status(400)
-        .end();
-    }
-    
-    res.send(mark);
-  });
-});
-
-
-app.delete('/sites/:site/marks/:id', (req, res) => {
-
-  Mark.remove({ _id: req.params.id }, (err, mark) => {
-    if (err) {
-      return res.status(400).end();
-    }
-
-    res.status(200).end();
-  });
-});
-
+app.use('/sites/:site/marks', require('./marks/marks.controller'));
 
 app.get('/sites/:site/marks/:id/comments', (req, res) => {
   var filter = {
