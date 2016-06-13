@@ -12,24 +12,9 @@ var PORT = process.env.PORT || 8888;
 mongoose.connect('mongodb://' + process.env.MONGODB);
 
 var Mark = require('./marks/Mark.model');
+var Tag = require('./tags/Tag.model');
+var Comment = require('./comments/Comment.model');
 
-var Comment = mongoose.model('Comment', {
-  text: String,
-  mark: String,
-  access: String,
-  user: String,
-  group: String,
-  created: { type: Date, default: Date.now }
-});
-
-var Tag = mongoose.model('Tag', {
-  text: String,
-  mark: String,
-  access: String,
-  user: String,
-  group: String,
-  created: { type: Date, default: Date.now }
-});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
