@@ -49,63 +49,7 @@ app.use('/sites/:site/marks', require('./marks/marks.controller'));
 
 app.use('/sites/:site/marks/:id/comments', require('./comments/comments.controller'));
 
-app.get('/sites/:site/marks/:id/tags', (req, res) => {
-  Mark.findOne({ _id: req.params.id }, (err, mark) => {
-    if (err) {
-      return res.status(400).end();
-    }
-
-    if (!mark) {
-      return res.status(404).end();
-    }
-
-    var filter = {
-      mark: mark._id,
-      access: 'public'
-    };
-
-    Object.assign(filter, accessFilter(req));
-
-    Tag.find(filter, (err, tags) => {
-      if (err) {
-        return res.status(400).end();
-      }
-
-      res.send(tags);
-    });
-  });
-});
-
-app.post('/sites/:site/marks/:id/tags', (req, res) => {
-  Mark.findOne({ _id: req.params.id }, (err, mark) => {
-    var tags = [];
-    if (err) {
-      return res.status(400).end();
-    }
-
-    if (!mark) {
-      return res.status(404).end();
-    }
-
-    req.body.tags.forEach((tag) => {
-      tags.push({
-        text: tag,
-        mark: mark._id,
-        access: req.body.access,
-        user: req.body.user,
-        group: req.body.group
-      });
-    });
-    
-    Tag.create(tags, (err) => {
-      if (err) {
-        return res.status(400).end();
-      }
-
-      return res.status(201).end();
-    });
-  });
-});
+app.use('/sites/:site/marks/:id/tags', require('./tags/tags.controller'));
 
 app.listen(PORT, () => {
   console.log(`Server started on port: ${ PORT }`);
