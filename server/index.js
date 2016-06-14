@@ -14,33 +14,6 @@ mongoose.connect('mongodb://' + process.env.MONGODB);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-var Mark = require('./marks/Mark.model');
-var Tag = require('./tags/Tag.model');
-var Comment = require('./comments/Comment.model');
-
-/**
- * Create filter based on access
- * @param req
- * @returns {{}}
- */
-const accessFilter = (req) => {
-  var filter = {};
-  if (req.query.access !== 'private') {
-    return filter;
-  }
-
-  filter.access = 'private';
-
-  if (req.query.group) {
-    filter.group = req.query.group;
-  } else {
-    filter.user = req.query.user;
-  }
-
-  return filter;
-};
-
-
 app.get('/', (req, res) => {
   res.end();
 });
