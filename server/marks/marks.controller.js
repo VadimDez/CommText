@@ -7,7 +7,7 @@ var router = express.Router();
 var Mark = require('./Mark.model');
 var helper = require('./../helper');
 
-router.get('/', (req, res) => {
+router.get('/sites/:site/marks', (req, res) => {
   var filter = {
     site: req.params.site,
     access: 'public'
@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/', (req, res) => {
+router.post('/sites/:site/marks', (req, res) => {
   (new Mark({
     site: req.params.site,
     text: req.body.text,
@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
 });
 
 
-router.delete('/:id', (req, res) => {
+router.delete('/sites/:site/marks/:id', (req, res) => {
 
   Mark.remove({ _id: req.params.id }, (err, mark) => {
     if (err) {
