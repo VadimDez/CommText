@@ -14,15 +14,7 @@ mongoose.connect('mongodb://' + process.env.MONGODB);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.end();
-});
-
-app.use('/sites/:site/marks', require('./marks/marks.controller'));
-
-app.use('/sites/:site/marks', require('./comments/comments.controller'));
-
-app.use('/sites/:site/marks', require('./tags/tags.controller'));
+app.use(require('./router'));
 
 app.listen(PORT, () => {
   console.log(`Server started on port: ${ PORT }`);
