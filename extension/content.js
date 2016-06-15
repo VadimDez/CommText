@@ -38,7 +38,7 @@ function sendMessage(message, cb) {
   chrome.runtime.sendMessage(message, cb);
 }
 
-chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function (message) {
   switch (message.action) {
     case 'highlight':
       highlight();
@@ -377,7 +377,7 @@ function getComments(markId) {
     if (request.readyState === 4 && request.status >= 400) {
       document.querySelector('#commtext-textarea-container__comments-count').innerHTML = '(0)';
     }
-  }
+  };
 
   request.send();
 }
@@ -399,8 +399,6 @@ function renderComments(comments) {
 }
 
 function renderHighlights(marks) {
-  console.log(marks);
-
   marks.forEach(mark => {
     if (!mark.xPath) {
       return;
@@ -424,13 +422,13 @@ function sendComment(markId, comment) {
   request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/comments', true);
   request.setRequestHeader('Content-Type', 'application/json');
 
-  request.onload = function() {
-    if (this.status >= 200 && this.status < 400) {
-      var comment = JSON.parse(this.response);
-
-      // renderComments([comment]); //takes too long
-    }
-  };
+  // TAKES TOO LONG
+  // request.onload = function() {
+  //   if (this.status >= 200 && this.status < 400) {
+  //     var comment = JSON.parse(this.response);
+  //     renderComments([comment]); //takes too long
+  //   }
+  // };
   renderComments([{
     text: comment,
     user: settings.pseudonym,
