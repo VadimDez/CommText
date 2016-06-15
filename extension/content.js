@@ -22,6 +22,7 @@ var tagsCount = 0;
 var commentsCount = 0;
 var marksCount = 0;
 
+main();
 
 function main() {
   clearMarked();
@@ -50,7 +51,7 @@ chrome.extension.onMessage.addListener(function (message) {
 });
 
 function loadSettings(_settings) {
-  settings = _settings || {};
+  settings = _settings || settings;
   main();
 }
 
