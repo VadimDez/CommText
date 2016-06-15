@@ -15,29 +15,25 @@ function cb(info, tab) {
     return;
   }
 
-  console.log('selected:', info.selectionText.trim());
-  console.log('on:', info.pageUrl);
-
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {action: 'highlight'}, function(response) {
-      console.log(response);
+
     });
   });
 }
 
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   if (changeInfo.status == 'complete') {
-    console.log('loaded');
 
     chrome.storage.local.get('settings', function (result) {
-      console.log('send settings');
-      console.log(result);
+      if (!result.settings) {
+        return;
+      }
 
       chrome.tabs.sendMessage(tabId, {
         action: 'settings',
         settings: result.settings
       }, function(response) {
-        console.log(response);
       });
     });
   }
