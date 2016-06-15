@@ -8,7 +8,7 @@ var markClass = 'commtext-marked';
 var sendCommentCallback;
 var sendTagsCallback;
 var deleteMarkCallback;
-var settings = {};
+var settings = { access: 'public', pseudonym: 'Unnamed' };
 var monthNames = [
   "January", "February", "March",
   "April", "May", "June", "July",
