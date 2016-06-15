@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('#commtext-settings [name="access"][value="public"]').addEventListener('change', fn);
 
   chrome.storage.local.get('settings', function (result) {
-    settings = result.settings;
+    settings = result.settings || settings;
 
     $nameElem.value = settings.pseudonym;
     document.querySelector('#commtext-settings [name="access"][value="' + settings.access + '"]').checked = true;
@@ -62,5 +62,5 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.tabs.sendMessage(tabs[0].id, message);
       }
     );
-  };
+  }
 });
