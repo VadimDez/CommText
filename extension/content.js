@@ -22,7 +22,7 @@ var tagsCount = 0;
 var commentsCount = 0;
 var marksCount = 0;
 
-main();
+window.addEventListener('load', main, false);
 
 function main() {
   clearMarked();
