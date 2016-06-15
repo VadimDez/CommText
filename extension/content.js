@@ -56,11 +56,12 @@ function loadSettings(_settings) {
 }
 
 function highlight() {
-  var selObj = window.getSelection();
-  var highlightedText = {};
-  highlightedText.text = selObj.toString();
-  highlightedText.xPath = getElementXPath();
-  var range = selObj.getRangeAt(0);
+  var selection = window.getSelection();
+  var highlightedText = {
+    text: selection.toString(),
+    xPath: getElementXPath()
+  };
+  var range = selection.getRangeAt(0);
   var node = createNode(range.extractContents());
   range.insertNode(node);
 
@@ -81,6 +82,7 @@ function createNode(selectionContents) {
 
 function getElementXPath() {
   var element = window.getSelection().anchorNode.parentNode;
+
   if (element != null && element != undefined) {
     if (element && element.id) {
       return '//*[@id="' + element.id + '"]';
@@ -99,11 +101,13 @@ function getElementTreeXPath(element) {
     var index = 0;
     for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling) {
       // Ignore document type declaration.
-      if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
+      if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE) {
         continue;
+      }
 
-      if (sibling.nodeName == element.nodeName)
+      if (sibling.nodeName == element.nodeName) {
         ++index;
+      }
     }
 
     var tagName = element.nodeName.toLowerCase();
@@ -195,8 +199,9 @@ function addPopup() {
       });
 
     if (tagsArray.length) {
-      var str = document.querySelector('#popup-tags__tags_count').innerHTML.substr(1);
-      document.querySelector('#popup-tags__tags_count').innerHTML = '(' + (parseInt(str.substr(0, str.length - 1), 10) + tagsArray.length) + ')';
+      var $tagsCount = document.querySelector('#popup-tags__tags_count');
+      var str = $tagsCount.innerHTML.substr(1);
+      $tagsCount.innerHTML = '(' + (parseInt(str.substr(0, str.length - 1), 10) + tagsArray.length) + ')';
       renderTags(tags, tagsArray);
       sendTagsCallback(tagsArray);
       tagsTextarea.value = '';
