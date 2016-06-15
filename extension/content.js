@@ -1,7 +1,7 @@
 /**
  * Created by Vadym Yatsyuk on 11/06/16
  */
-console.log('initialized');
+
 var API = 'https://commtext.herokuapp.com';
 var popup;
 var markClass = 'commtext-marked';
@@ -74,10 +74,6 @@ function createNode(selectionContents) {
   span.classList.add(markClass);
   span.appendChild(selectionContents);
   span.classList.add('commtext-extension');
-
-  span.addEventListener('click', function () {
-    console.log('primary action');
-  });
 
   return span;
 }
