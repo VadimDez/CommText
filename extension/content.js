@@ -16,10 +16,6 @@ var monthNames = [
   "November", "December"
 ];
 var createdMark; // fallback
-var commentsLoaded = false;
-var tagsLoaded = false;
-var tagsCount = 0;
-var commentsCount = 0;
 var marksCount = 0;
 
 window.addEventListener('load', main, false);
@@ -199,9 +195,7 @@ function addPopup() {
       });
 
     if (tagsArray.length) {
-      var $tagsCount = document.querySelector('#popup-tags__tags_count');
-      var str = $tagsCount.innerHTML.substr(1);
-      $tagsCount.innerHTML = '(' + (parseInt(str.substr(0, str.length - 1), 10) + tagsArray.length) + ')';
+      incrementCount(document.querySelector('#popup-tags__tags_count'));
       renderTags(tags, tagsArray);
       sendTagsCallback(tagsArray);
       tagsTextarea.value = '';
@@ -249,10 +243,17 @@ function renderTags(elem, tags) {
   })
 }
 
-function createMark(highlightedText, node) {
+function request(method, url) {
   var request = new XMLHttpRequest();
-  request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks', true);
+
+  request.open(method, url, true);
   request.setRequestHeader('Content-Type', 'application/json');
+
+  return request;
+}
+
+function createMark(highlightedText, node) {
+  var request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks');
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
@@ -270,12 +271,7 @@ function createMark(highlightedText, node) {
 }
 
 function getMarks() {
-  var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks?access='+
-    settings.access +
-    '&user=' + settings.pseudonym +
-    '&group=' + settings.group, true);
-  request.setRequestHeader('Content-Type', 'application/json');
+  var request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks?' + settingsAsParams());
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
@@ -292,9 +288,7 @@ function getMarks() {
 
 
 function deleteMark(markId) {
-  var request = new XMLHttpRequest();
-  request.open('DELETE', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId, true);
-  request.setRequestHeader('Content-Type', 'application/json');
+  var request = request('DELETE', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId);
 
   // request.onload = function() {
   //   if (this.status >= 200 && this.status < 400) {
@@ -323,25 +317,21 @@ function clearAllChil(elem) {
 }
 
 function getTags(markId) {
-  var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags?access=' + settings.access +
-    '&user=' + settings.pseudonym +
-    '&group=' + settings.group, true);
-  request.setRequestHeader('Content-Type', 'application/json');
+  var request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags?' + settingsAsParams());
 
   request.onload = function() {
     var count = 0;
     if (this.status >= 200 && this.status < 400) {
       var tags = JSON.parse(this.response);
 
-      renderTags(document.querySelector('#popup-tags__tags'), tags
-        .map(function (tag) {
+      renderTags(
+        document.querySelector('#popup-tags__tags'),
+        tags.map(function (tag) {
           return tag.text;
-        }));
+        })
+      );
 
-      tagsLoaded = true;
       count = tags.length;
-      tagsCount = count;
     }
 
     document.querySelector('#popup-tags__tags_count').innerHTML = '(' + count + ')';
@@ -358,12 +348,7 @@ function getTags(markId) {
 
 
 function getComments(markId) {
-  var request = new XMLHttpRequest();
-  request.open('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments?access=' +
-    settings.access +
-    '&user=' + settings.pseudonym +
-    '&group=' + settings.group, true);
-  request.setRequestHeader('Content-Type', 'application/json');
+  var request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments?' + settingsAsParams());
 
   request.onload = function() {
     var count = 0;
@@ -373,8 +358,6 @@ function getComments(markId) {
       count = comments.length;
     }
 
-    commentsLoaded = true;
-    commentsCount = count;
     document.querySelector('#commtext-textarea-container__comments-count').innerHTML = '(' + count + ')';
   };
 
@@ -424,9 +407,7 @@ function replaceMark(mark) {
 }
 
 function sendComment(markId, comment) {
-  var request = new XMLHttpRequest();
-  request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/comments', true);
-  request.setRequestHeader('Content-Type', 'application/json');
+  var request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/comments');
 
   // TAKES TOO LONG
   // request.onload = function() {
@@ -441,9 +422,7 @@ function sendComment(markId, comment) {
     created: new Date()
   }]);
 
-  // update count + 1
-  var str = document.querySelector('#commtext-textarea-container__comments-count').innerHTML.substr(1);
-  document.querySelector('#commtext-textarea-container__comments-count').innerHTML = '(' + (parseInt(str.substr(0, str.length - 1), 10) + 1) + ')';
+  incrementCount(document.querySelector('#commtext-textarea-container__comments-count'));
 
   request.send(JSON.stringify({
     comment: comment,
@@ -453,10 +432,13 @@ function sendComment(markId, comment) {
   }));
 }
 
+function incrementCount($elem) {
+  var str = $elem.innerHTML.substr(1);
+  $elem.innerHTML = '(' + (parseInt(str.substr(0, str.length - 1), 10) + 1) + ')';
+}
+
 function sendTags(markId, tags) {
-  var request = new XMLHttpRequest();
-  request.open('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/tags', true);
-  request.setRequestHeader('Content-Type', 'application/json');
+  var request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/tags');
 
   request.send(JSON.stringify({
     tags: tags,
@@ -490,3 +472,9 @@ document.querySelector('body').addEventListener('click', function(evt) {
     showPopup(evt.target.dataset.mark);
   }
 }, true);
+
+function settingsAsParams() {
+  return 'access=' + settings.access +
+  '&user=' + settings.pseudonym +
+  '&group=' + settings.group;
+}
