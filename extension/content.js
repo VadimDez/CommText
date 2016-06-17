@@ -244,18 +244,18 @@ function renderTags(elem, tags) {
 }
 
 function request(method, url) {
-  var request = new XMLHttpRequest();
+  var _request = new XMLHttpRequest();
 
-  request.open(method, url, true);
-  request.setRequestHeader('Content-Type', 'application/json');
+  _request.open(method, url, true);
+  _request.setRequestHeader('Content-Type', 'application/json');
 
-  return request;
+  return _request;
 }
 
 function createMark(highlightedText, node) {
-  var request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks');
+  var _request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks');
 
-  request.onload = function() {
+  _request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
       var data = JSON.parse(this.response);
       createdMark = data._id;
@@ -263,7 +263,7 @@ function createMark(highlightedText, node) {
     }
   };
 
-  request.send(JSON.stringify(Object.assign({}, highlightedText, {
+  _request.send(JSON.stringify(Object.assign({}, highlightedText, {
     access: settings.access,
     user: settings.pseudonym,
     group: settings.group
@@ -271,9 +271,9 @@ function createMark(highlightedText, node) {
 }
 
 function getMarks() {
-  var request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks?' + settingsAsParams());
+  var _request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks?' + settingsAsParams());
 
-  request.onload = function() {
+  _request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
       var marks = JSON.parse(this.response);
       renderHighlights(marks);
@@ -283,12 +283,12 @@ function getMarks() {
     }
   };
 
-  request.send();
+  _request.send();
 }
 
 
 function deleteMark(markId) {
-  var request = request('DELETE', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId);
+  var _request = request('DELETE', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId);
 
   // request.onload = function() {
   //   if (this.status >= 200 && this.status < 400) {
@@ -302,7 +302,7 @@ function deleteMark(markId) {
     closePopup();
   }
 
-  request.send();
+  _request.send();
 }
 
 function clearTags() {
@@ -317,9 +317,9 @@ function clearAllChil(elem) {
 }
 
 function getTags(markId) {
-  var request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags?' + settingsAsParams());
+  var _request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/tags?' + settingsAsParams());
 
-  request.onload = function() {
+  _request.onload = function() {
     var count = 0;
     if (this.status >= 200 && this.status < 400) {
       var tags = JSON.parse(this.response);
@@ -337,20 +337,20 @@ function getTags(markId) {
     document.querySelector('#popup-tags__tags_count').innerHTML = '(' + count + ')';
   };
 
-  request.onreadystatechange = function () {
-    if (request.readyState === 4 && request.status >= 400) {
+  _request.onreadystatechange = function () {
+    if (_request.readyState === 4 && _request.status >= 400) {
       document.querySelector('#popup-tags__tags_count').innerHTML = '(0)';
     }
   };
 
-  request.send();
+  _request.send();
 }
 
 
 function getComments(markId) {
-  var request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments?' + settingsAsParams());
+  var _request = request('GET', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId + '/comments?' + settingsAsParams());
 
-  request.onload = function() {
+  _request.onload = function() {
     var count = 0;
     if (this.status >= 200 && this.status < 400) {
       var comments = JSON.parse(this.response);
@@ -362,13 +362,13 @@ function getComments(markId) {
   };
 
 
-  request.onreadystatechange = function () {
-    if (request.readyState === 4 && request.status >= 400) {
+  _request.onreadystatechange = function () {
+    if (_request.readyState === 4 && _request.status >= 400) {
       document.querySelector('#commtext-textarea-container__comments-count').innerHTML = '(0)';
     }
   };
 
-  request.send();
+  _request.send();
 }
 
 function renderComments(comments) {
@@ -407,7 +407,7 @@ function replaceMark(mark) {
 }
 
 function sendComment(markId, comment) {
-  var request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/comments');
+  var _request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/comments');
 
   // TAKES TOO LONG
   // request.onload = function() {
@@ -424,7 +424,7 @@ function sendComment(markId, comment) {
 
   incrementCount(document.querySelector('#commtext-textarea-container__comments-count'));
 
-  request.send(JSON.stringify({
+  _request.send(JSON.stringify({
     comment: comment,
     access: settings.access,
     user: settings.pseudonym,
@@ -438,9 +438,9 @@ function incrementCount($elem) {
 }
 
 function sendTags(markId, tags) {
-  var request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/tags');
+  var _request = request('POST', API + '/sites/' + encodeURIComponent(document.location.href) + '/marks/' + markId +'/tags');
 
-  request.send(JSON.stringify({
+  _request.send(JSON.stringify({
     tags: tags,
     access: settings.access,
     user: settings.pseudonym,
