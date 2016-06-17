@@ -10,19 +10,17 @@ chrome.contextMenus.create({
   onclick: cb
 });
 
-function cb(info, tab) {
+function cb(info) {
   if (!info.selectionText) {
     return;
   }
 
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {action: 'highlight'}, function(response) {
-
-    });
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { action: 'highlight' });
   });
 }
 
-chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo) {
   if (changeInfo.status == 'complete') {
 
     chrome.storage.local.get('settings', function (result) {
@@ -39,12 +37,12 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   }
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request) {
   if (request.action === 'count') {
     setCount(request.count);
   }
 });
 
 function setCount(count) {
-  chrome.browserAction.setBadgeText({text: '' + count});
+  chrome.browserAction.setBadgeText({ text: '' + count });
 }
