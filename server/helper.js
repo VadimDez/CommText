@@ -2,6 +2,7 @@
  * Created by Vadym Yatsyuk on 13/06/16
  */
 
+const ACCESS_PRIVATE = 'private';
 
 /**
  * Create filter based on access
@@ -10,11 +11,12 @@
  */
 const accessFilter = (req) => {
   var filter = {};
-  if (req.query.access !== 'private') {
+  
+  if (req.query.access !== ACCESS_PRIVATE) {
     return filter;
   }
 
-  filter.access = 'private';
+  filter.access = ACCESS_PRIVATE;
 
   if (req.query.group) {
     filter.group = req.query.group;
