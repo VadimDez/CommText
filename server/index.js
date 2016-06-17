@@ -8,8 +8,9 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 8888;
+var MONGODB = process.env.MONGODB || 'localhost:27017/commtext';
 
-mongoose.connect('mongodb://' + process.env.MONGODB);
+mongoose.connect('mongodb://' + MONGODB);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
