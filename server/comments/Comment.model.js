@@ -2,7 +2,8 @@
  * Created by Vadym Yatsyuk on 13/06/16
  */
 
-var mongoose = require('mongoose');
+var bluebird = require('bluebird');
+var mongoose = bluebird.promisifyAll(require('mongoose'));
 
 module.exports = mongoose.model('Comment', {
   text: String,
