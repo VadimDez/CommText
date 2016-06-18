@@ -9,7 +9,10 @@
     display: none;
     font-family: "Helvetica Neue", sans-serif;
     font-size: 15px;
-    border-left: 5px solid #00cccc;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 0 6px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 6px 0px rgba(0,0,0,0.75);
+    box-shadow: 0 0 6px 0px rgba(0,0,0,0.75);
 }
 
 #commtext-popup textarea {
@@ -28,9 +31,6 @@
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 #commtext-popup button {
-    /*border: 1px solid white;*/
-    /*border-radius: 20px;*/
-    /*padding: 5px 10px;*/
     display: inline-block;
     padding: 6px 12px;
     margin-bottom: 0;
@@ -97,16 +97,26 @@
 }
 
 #commtext-popup__nav {
-    height: 60px;
+    height: 80px;
+    background-color: #f06d6f;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 #commtext-popup__nav__close-btn {
-    float: left;
-    margin-top: 20px;
-    margin-left: 10px;
-    text-decoration: underline;
-    cursor: pointer;
-    color: #00cccc;
+    position: absolute;
+    right: -7px;
+    top: -7px;
+    background-color: #f06d6f;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    width: 20px;
+    text-align: center;
+    border-radius: 45%;
+    line-height: 20px;
+    -webkit-box-shadow: 0 0 6px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 6px 1px rgba(0,0,0,0.75);
+    box-shadow: 0 0 6px 1px rgba(0,0,0,0.75);
 }
 
 #popup__nav__delete-btn {
