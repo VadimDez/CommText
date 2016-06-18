@@ -97,7 +97,7 @@
 }
 
 #commtext-popup__nav {
-    height: 80px;
+    height: 50px;
     background-color: #f06d6f;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -123,6 +123,30 @@
     margin-top: 10px;
     margin-right: 10px;
     float: right;
+}
+#commtext-popup__content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50px;
+    bottom: 0;
+    overflow-y: scroll;
+}
+
+#popup__nav__icon-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 15px;
+}
+
+#popup__nav__icon {
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #popup-tags {
