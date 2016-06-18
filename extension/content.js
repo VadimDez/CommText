@@ -149,7 +149,7 @@ function addPopup() {
 
   var closeButton = document.createElement('span');
   closeButton.setAttribute('id', 'commtext-popup__nav__close-btn');
-  closeButton.innerHTML = 'X Close';
+  closeButton.innerHTML = 'x';
 
   closeButton.addEventListener('click', function () {
     closePopup();
