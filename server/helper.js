@@ -1,6 +1,7 @@
 /**
  * Created by Vadym Yatsyuk on 13/06/16
  */
+var chalk = require('chalk');
 
 const ACCESS_PRIVATE = 'private';
 
@@ -29,7 +30,8 @@ const accessFilter = (req) => {
 
 
 function handleError(res, statusCode) {
-  return () => {
+  return err => {
+    console.log(chalk.bold.red(err));
     res.status(statusCode || 400).end();
   }
 }
