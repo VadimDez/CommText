@@ -10,62 +10,69 @@ var Tag = require('./Tag.model');
 var helper = require('./../helper');
 
 
-router.get('/sites/:site/marks/:id/tags', (req, res) => {
-  Mark.findOne({ _id: req.params.id }, (err, mark) => {
-    if (err) {
-      return res.status(400).end();
+function handleError(res, statusCode) {
+  return () => {
+    res.status(statusCode || 400).end();
+  }
+}
+
+function handleNotFound(res) {
+  return entity => {
+    if (!entity) {
+      res.status(404).end();
+      return null;
     }
     
-    if (!mark) {
-      return res.status(404).end();
-    }
+    return entity;
+  }
+}
 
-    var filter = {
-      mark: mark._id,
-      access: 'public'
-    };
+function handleResponse(res, statusCode) {
+  return entity => {
+    res.status(statusCode || 200).json(entity);
+  }
+}
 
-    Object.assign(filter, helper.accessFilter(req));
-
-    Tag.find(filter, (err, tags) => {
-      if (err) {
-        return res.status(400).end();
-      }
-
-      res.send(tags);
-    });
-  });
+router.get('/sites/:site/marks/:id/tags', (req, res) => {
+  Mark.findOneAsync({ _id: req.params.id })
+    .then(handleNotFound(res))
+    .then(mark => {
+      var filter = {
+        mark: mark._id,
+        access: 'public'
+      };
+  
+      Object.assign(filter, helper.accessFilter(req));
+  
+      Tag.findAsync(filter)
+        .then(handleResponse(res))
+        .catch(handleError(res));
+    })
+    .catch(handleError(res));
 });
 
 router.post('/sites/:site/marks/:id/tags', (req, res) => {
-  Mark.findOne({ _id: req.params.id }, (err, mark) => {
-    var tags = [];
-    if (err) {
-      return res.status(400).end();
-    }
-
-    if (!mark) {
-      return res.status(404).end();
-    }
-
-    req.body.tags.forEach((tag) => {
-      tags.push({
-        text: tag,
-        mark: mark._id,
-        access: req.body.access,
-        user: req.body.user,
-        group: req.body.group
+  Mark.findOneAsync({ _id: req.params.id })
+    .then(handleNotFound(res))
+    .then(mark => {
+      var tags = [];
+      req.body.tags.forEach((tag) => {
+        tags.push({
+          text: tag,
+          mark: mark._id,
+          access: req.body.access,
+          user: req.body.user,
+          group: req.body.group
+        });
       });
-    });
-
-    Tag.create(tags, (err) => {
-      if (err) {
-        return res.status(400).end();
-      }
-
-      return res.status(201).end();
-    });
-  });
+  
+      Tag.createAsync(tags)
+        .then(() => {
+          return res.status(201).end();
+        })
+        .catch(handleError(res));
+    })
+    .catch(handleError(res));
 });
 
 module.exports = router;
