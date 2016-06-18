@@ -27,6 +27,33 @@ const accessFilter = (req) => {
   return filter;
 };
 
+
+function handleError(res, statusCode) {
+  return () => {
+    res.status(statusCode || 400).end();
+  }
+}
+
+function handleNotFound(res) {
+  return entity => {
+    if (!entity) {
+      res.status(404).end();
+      return null;
+    }
+
+    return entity;
+  }
+}
+
+function handleResponse(res, statusCode) {
+  return entity => {
+    res.status(statusCode || 200).json(entity);
+  }
+}
+
 module.exports = {
-  accessFilter: accessFilter
+  accessFilter: accessFilter,
+  handleError: handleError,
+  handleNotFound: handleNotFound,
+  handleResponse: handleResponse
 };

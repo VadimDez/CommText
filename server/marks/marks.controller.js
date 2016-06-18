@@ -7,22 +7,6 @@ var router = express.Router();
 var Mark = require('./Mark.model');
 var helper = require('./../helper');
 
-
-function handleError(res) {
-  return (err) => {
-    return res.status(400).end();
-  }
-}
-
-function handleResponse(res, statusCode) {
-  return entity => {
-    if (entity) {
-      res.status(statusCode || 200)
-        .json(entity)
-    }
-  }
-}
-
 router.get('/sites/:site/marks', (req, res) => {
   var filter = {
     site: req.params.site,
@@ -32,8 +16,8 @@ router.get('/sites/:site/marks', (req, res) => {
   Object.assign(filter, helper.accessFilter(req));
 
   Mark.findAsync(filter)
-    .then(handleResponse(res))
-    .catch(handleError(res));
+    .then(helper.handleResponse(res))
+    .catch(helper.handleError(res));
 });
 
 router.post('/sites/:site/marks', (req, res) => {
@@ -46,17 +30,17 @@ router.post('/sites/:site/marks', (req, res) => {
     group: req.body.group
   }))
     .saveAsync()
-    .then(handleResponse(res))
-    .catch(handleError(res));
+    .then(helper.handleResponse(res))
+    .catch(helper.handleError(res));
 });
 
 
 router.delete('/sites/:site/marks/:id', (req, res) => {
   Mark.removeAsync({ _id: req.params.id })
     .then(() => {
-      res.status(200).end();
+      res.status(204).end();
     })
-    .catch(handleError(res));
+    .catch(helper.handleError(res));
 });
 
 module.exports = router;
