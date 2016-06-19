@@ -186,11 +186,18 @@ function addPopup() {
   var tagsTextarea = document.createElement('textarea');
   tagsTextarea.setAttribute('id', 'popup-tags__textarea');
   tagsContainer.appendChild(tagsTextarea);
+  tagsTextarea.addEventListener('keyup', function (e) {
+    if (e.keyCode === 13 || e.keyCode === 188) {
+      addTags();
+    }
+  });
 
   var buttonSendTags = document.createElement('button');
   buttonSendTags.setAttribute('type', 'button');
   buttonSendTags.innerText = 'Send Tags';
-  buttonSendTags.addEventListener('click', function () {
+  buttonSendTags.addEventListener('click', addTags);
+
+  function addTags() {
     var tagsArray = [];
     tagsTextarea.value.split(',').forEach(function (value) {
       value = value.trim();
@@ -206,7 +213,7 @@ function addPopup() {
       sendTagsCallback(tagsArray);
       tagsTextarea.value = '';
     }
-  });
+  }
 
   tagsContainer.appendChild(buttonSendTags);
 
@@ -215,6 +222,11 @@ function addPopup() {
   var textareaContainer = document.createElement('div');
   textareaContainer.setAttribute('id', 'commtext-textarea-container');
   var textarea = document.createElement('textarea');
+  textarea.addEventListener('keyup', function (e) {
+    if (e.keyCode === 13) {
+      addComment();
+    }
+  });
 
   var commentTitle = document.createElement('h5');
   commentTitle.innerHTML = 'Comments <span id="commtext-textarea-container__comments-count">Loading...</span>';
@@ -230,13 +242,14 @@ function addPopup() {
   var button = document.createElement('button');
   button.setAttribute('type', 'button');
   button.innerText = 'Comment';
-  button.addEventListener('click', function () {
-    sendCommentCallback(textarea.value);
-    textarea.value = '';
-  });
+  button.addEventListener('click', addComment);
 
   textareaContainer.appendChild(button);
 
+  function addComment() {
+    sendCommentCallback(textarea.value);
+    textarea.value = '';
+  }
 
   document.body.appendChild(popup);
 }
