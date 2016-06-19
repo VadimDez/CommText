@@ -147,6 +147,10 @@ function addPopup() {
   nav.setAttribute('id', 'commtext-popup__nav');
   popup.appendChild(nav);
 
+  var content = document.createElement('div');
+  content.setAttribute('id', 'commtext-popup__content');
+  popup.appendChild(content);
+
   var closeButton = document.createElement('span');
   closeButton.setAttribute('id', 'commtext-popup__nav__close-btn');
   closeButton.innerHTML = 'x';
@@ -166,6 +170,7 @@ function addPopup() {
   });
 
   nav.appendChild(deleteButton);
+  nav.innerHTML += '<div id="popup__nav__icon-container"><div id="popup__nav__icon"></div></div>';
 
   var tagsContainer = document.createElement('div');
   tagsContainer.setAttribute('id', 'popup-tags');
@@ -186,13 +191,14 @@ function addPopup() {
   buttonSendTags.setAttribute('type', 'button');
   buttonSendTags.innerText = 'Send Tags';
   buttonSendTags.addEventListener('click', function () {
-    var tagsArray = tagsTextarea.value.split(',')
-      .filter(function (value) {
-        return value.trim().length;
-      })
-      .map(function (tag) {
-        return tag.trim();
-      });
+    var tagsArray = [];
+    tagsTextarea.value.split(',').forEach(function (value) {
+      value = value.trim();
+
+      if (value.length) {
+        tagsArray.push(value);
+      }
+    });
 
     if (tagsArray.length) {
       incrementCount(document.querySelector('#popup-tags__tags_count'));
@@ -204,7 +210,7 @@ function addPopup() {
 
   tagsContainer.appendChild(buttonSendTags);
 
-  popup.appendChild(tagsContainer);
+  content.appendChild(tagsContainer);
 
   var textareaContainer = document.createElement('div');
   textareaContainer.setAttribute('id', 'commtext-textarea-container');
@@ -219,7 +225,7 @@ function addPopup() {
   textareaContainer.appendChild(comments);
 
   textareaContainer.appendChild(textarea);
-  popup.appendChild(textareaContainer);
+  content.appendChild(textareaContainer);
 
   var button = document.createElement('button');
   button.setAttribute('type', 'button');
