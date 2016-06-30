@@ -12,5 +12,4 @@ Google Chrome extension that allows to comment and follow the discussion on spec
 * Select ***extension*** directory in just downloaded directory
 
 ### License
-
 [MIT](https://tldrlegal.com/license/mit-license) © [Vadym Yatsyuk](https://github.com/vadimdez)
